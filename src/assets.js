@@ -22,7 +22,8 @@ const SOUND_FILES = {
   mtt9: 'assets/sfx/snd_mtt9.wav', heartshot: 'assets/sfx/snd_heartshot.wav', mtthit: 'assets/sfx/snd_mtt_hit.wav',
   prebomb: 'assets/sfx/snd_mtt_prebomb.wav', burst: 'assets/sfx/snd_mtt_burst.wav', bomb: 'assets/sfx/snd_bomb.wav',
   noise: 'assets/sfx/snd_noise.wav', block2: 'assets/sfx/snd_block2.wav', phone: 'assets/sfx/snd_phone.wav',
-  yeah: 'assets/sfx/snd_yeah.wav', explosion: 'assets/sfx/mus_explosion.wav',   // "Battle Against a True Hero" (la misma que carga scr_battlegroup)
+  yeah: 'assets/sfx/snd_yeah.wav', explosion: 'assets/sfx/mus_explosion.wav',
+  break1: 'assets/sfx/snd_break1.wav', break2: 'assets/sfx/snd_break2.wav', dogsalad: 'assets/sfx/snd_dogsalad.wav',   // alma rota / Hot Dog
 };
 
 // Música de cada jefe (la que carga scr_battlegroup)
@@ -44,11 +45,16 @@ export function unlockAudio() {
 
 // Volumen: cámbialo aquí (0 = silencio, 1 = máximo). M silencia / reactiva todo.
 export const VOLUME = { master: 0.4, music: 0.8, sfx: 0.7 };
-let master = null, muted = false;
+let master = null, muted = false, musicFade = 1;
+function applyVolume() {
+  if (master) master.gain.value = muted ? 0 : VOLUME.master;
+  musicEl.volume = muted ? 0 : Math.max(0, Math.min(1, VOLUME.master * VOLUME.music * 2 * musicFade));
+}
+export function setVolume(v) { VOLUME.master = Math.max(0, Math.min(1, v)); applyVolume(); }   // barra de volumen (0..1)
+export function isMuted() { return muted; }
 export function toggleMute() {
   muted = !muted;
-  if (master) master.gain.value = muted ? 0 : VOLUME.master;
-  musicEl.volume = muted ? 0 : Math.min(1, VOLUME.master * VOLUME.music * 2);
+  applyVolume();
 }
 
 // La música va por un <audio> (empieza al instante, sin esperar a decodificar 1.8 MB)
@@ -68,10 +74,10 @@ export function playMusic(name = 'undyne', rate = 1) {   // rate = tono de caste
   const src = new URL(MUSIC[name], location.href).href;
   if (musicEl.src !== src) { musicEl.pause(); musicEl.src = src; }
   musicEl.preservesPitch = false; musicEl.defaultPlaybackRate = rate; musicEl.playbackRate = rate;
-  musicEl.volume = muted ? 0 : Math.min(1, VOLUME.master * VOLUME.music * 2);
+  musicFade = 1; applyVolume();
   if (musicEl.paused) musicEl.play().then(() => { music = true; }).catch(e => console.warn('música bloqueada:', e));
 }
-export function setMusicVolume(f) { musicEl.volume = muted ? 0 : Math.max(0, Math.min(1, VOLUME.master * VOLUME.music * 2 * f)); }
+export function setMusicVolume(f) { musicFade = f; applyVolume(); }
 export function stopMusic() { musicWanted = false; music = null; musicEl.pause(); musicEl.currentTime = 0; }
 
 export async function loadAssets() {

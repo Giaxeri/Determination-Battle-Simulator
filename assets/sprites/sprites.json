@@ -259,6 +259,32 @@
   ],
   "frames": 1
  },
+ "spr_tobydogscoot": {
+  "w": 64,
+  "h": 38,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   12,
+   61,
+   37
+  ],
+  "frames": 2
+ },
+ "spr_sleepdog": {
+  "w": 29,
+  "h": 15,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   2,
+   3,
+   27,
+   14
+  ],
+  "frames": 2
+ },
  "spr_bullet_test_l": {
   "w": 28,
   "h": 24,
@@ -389,6 +415,45 @@
   ],
   "frames": 1
  },
+ "spr_froggit": {
+  "w": 112,
+  "h": 112,
+  "ox": 2,
+  "oy": 2,
+  "bbox": [
+   0,
+   0,
+   107,
+   111
+  ],
+  "frames": 4
+ },
+ "spr_floweynice": {
+  "w": 42,
+  "h": 44,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   0,
+   41,
+   43
+  ],
+  "frames": 2
+ },
+ "spr_floweywink": {
+  "w": 42,
+  "h": 44,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   0,
+   41,
+   43
+  ],
+  "frames": 1
+ },
  "spr_blookhat": {
   "w": 46,
   "h": 31,
@@ -412,6 +477,32 @@
    4,
    54,
    79
+  ],
+  "frames": 2
+ },
+ "spr_papyrusboss_head": {
+  "w": 44,
+  "h": 70,
+  "ox": 2,
+  "oy": 2,
+  "bbox": [
+   0,
+   0,
+   43,
+   65
+  ],
+  "frames": 1
+ },
+ "spr_tembattle": {
+  "w": 100,
+  "h": 100,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   4,
+   97,
+   99
   ],
   "frames": 2
  },
@@ -1689,6 +1780,19 @@
   ],
   "frames": 1
  },
+ "spr_sansb_face": {
+  "w": 32,
+  "h": 32,
+  "ox": 16,
+  "oy": 15,
+  "bbox": [
+   0,
+   0,
+   31,
+   29
+  ],
+  "frames": 15
+ },
  "spr_target": {
   "w": 562,
   "h": 128,
@@ -1727,6 +1831,19 @@
    99
   ],
   "frames": 6
+ },
+ "spr_napstablook_d": {
+  "w": 17,
+  "h": 33,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   20,
+   16,
+   32
+  ],
+  "frames": 1
  },
  "spr_undynespear_l": {
   "w": 53,

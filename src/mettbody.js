@@ -141,7 +141,7 @@ export class MettBody {
 // ============================================================================
 //  obj_ratingsmaster: RATINGS arriba a la izquierda, con la gráfica y la lista de puntos
 // ============================================================================
-const RQ_NAMES = { 1: 'Violence', 2: 'Disappoint', 3: 'Justice', 4: 'Action', 11: 'Dramatic', 12: 'Writing' };
+const RQ_NAMES = { 1: 'Violence', 2: 'Disappoint', 3: 'Justice', 4: 'Action', 9: 'OnBrandFood', 10: 'OnBrandFood', 11: 'Dramatic', 12: 'Writing' };
 export class Ratings {
   constructor(b) {
     this.b = b; this.x = 20; this.y = 10; this.ratings = 4000;
@@ -163,6 +163,8 @@ export class Ratings {
       const p = this.b.player; v = 100;
       if (p.hp < p.maxHp / 1.5) v = 150; if (p.hp < p.maxHp / 2) v = 250; if (p.hp < p.maxHp / 4) v = 400; if (p.hp < 4) v = 500; if (p.hp === 1) v = 600;
     }
+    if (curtype === 9) v = u === 0 ? 300 : 200;                       // Legendary Hero
+    if (curtype === 10) v = u === 0 ? 500 : 300;                      // Glamburger
     if (curtype === 12) v = this.essay;
     this.typeuse[curtype] = u + 1;
     if (this.b.turns >= 20 && v > 0) v *= 2;

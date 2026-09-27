@@ -3,11 +3,13 @@ import { ATTACKS } from './attacks.js';
 import { MUFFET_ATTACKS } from './muffet.js';
 import { NAPSTA_ATTACKS } from './napstablook.js';
 import { METT_ATTACKS } from './mettaton.js';
+import { SETTINGS, saveSettings, RESOLUTIONS } from './settings.js';
+import { layout } from './ui.js';
 
 // Menús de inicio al estilo "Select your bad time": texto blanco sobre negro y el alma roja como cursor.
-//   Página 1: Bosses List
-//   Página 2: la pelea completa ("Battle Against a True Hero") y debajo cada ataque por separado
-// Cada jefe: su pelea completa (con el nombre de su canción) y sus ataques sueltos
+//   Página 0: Bosses List (+ Options)
+//   Página 1: la pelea completa de un jefe y debajo cada ataque por separado
+//   Página 2: Options (resolución y nombre)    Página 3: nombrar al humano (como al empezar el juego)
 export const BOSSES = [
   { name: 'Undyne the Undying', id: 'undyne', full: 'Battle Against a True Hero', attacks: ATTACKS },
   { name: 'Muffet', id: 'muffet', full: 'Spider Dance', attacks: MUFFET_ATTACKS },
@@ -16,12 +18,16 @@ export const BOSSES = [
 ];
 
 const VISIBLE = 11;          // filas visibles antes de desplazar la lista
+const UPPER = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', LOWER = 'abcdefghijklmnopqrstuvwxyz';
 
 export class BossMenu {
-  constructor(onPick, page = 0, boss = 0) { this.onPick = onPick; this.page = page; this.boss = boss; this.sel = 0; this.scroll = 0; this.t = 0; this.chosen = null; }
+  constructor(onPick, page = 0, boss = 0) {
+    this.onPick = onPick; this.page = page; this.boss = boss; this.sel = page === 1 ? 0 : 0; this.scroll = 0; this.t = 0; this.chosen = null;
+    this.face = 0; this.dogX = -80;
+  }
 
   items() {
-    if (this.page === 0) return BOSSES.map(b => ({ label: b.name }));
+    if (this.page === 0) return [...BOSSES.map(b => ({ label: b.name })), { label: 'Options', options: true }];
     const B = BOSSES[this.boss];
     return [{ label: B.full, mode: 'battle', boss: B.id },
             ...B.attacks.map(a => ({ label: a.name, mode: 'single', attack: a, boss: B.id }))];
@@ -33,6 +39,8 @@ export class BossMenu {
       if (this.t > 8) this.onPick(this.chosen);
       return;
     }
+    if (this.page === 2) return this.updateOptions(inp);
+    if (this.page === 3) return this.updateNaming(inp);
     const list = this.items(), n = list.length;
     if (inp.up)   { this.sel = (this.sel + n - 1) % n; playSound('squeak'); }
     if (inp.down) { this.sel = (this.sel + 1) % n; playSound('squeak'); }
@@ -41,65 +49,111 @@ export class BossMenu {
     if (inp.cancel && this.page === 1) { this.page = 0; this.sel = this.boss; this.scroll = 0; playSound('squeak'); return; }
     if (inp.confirm) {
       playSound('select');
+      if (this.page === 0 && list[this.sel].options) { this.page = 2; this.opt = 0; return; }
       if (this.page === 0) { this.boss = this.sel; this.page = 1; this.sel = 0; this.scroll = 0; return; }
       this.chosen = list[this.sel]; this.t = 0;
     }
   }
 
+  // ---------------------------------------------------------------- Options
+  updateOptions(inp) {
+    const back = () => { this.page = 0; this.sel = BOSSES.length; playSound('squeak'); };
+    if (inp.cancel) return back();
+    if (inp.up) { this.opt = (this.opt + 2) % 3; playSound('squeak'); }
+    if (inp.down) { this.opt = (this.opt + 1) % 3; playSound('squeak'); }
+    if (this.opt === 0 && (inp.left || inp.right || inp.confirm)) {       // resolución: Small / Default / Large
+      const i = RESOLUTIONS.findIndex(r => r.id === SETTINGS.res), d = inp.left ? -1 : 1;
+      SETTINGS.res = RESOLUTIONS[(i + d + RESOLUTIONS.length) % RESOLUTIONS.length].id;
+      saveSettings(); layout(); playSound(inp.confirm ? 'select' : 'squeak');
+    }
+    if (this.opt === 1 && inp.confirm) { playSound('select'); this.page = 3; this.draft = SETTINGS.name === 'Player' ? '' : SETTINGS.name; this.cur = 0; }
+    if (this.opt === 2 && inp.confirm) { playSound('select'); back(); }
+  }
+
+  // ---------------------------------------------------------------- nombre (obj_naming): letras + Quit / Backspace / Done
+  namingCells() {
+    const cells = [];
+    [UPPER, LOWER].forEach((set, s) => [...set].forEach((ch, i) =>
+      cells.push({ ch, x: 120 + (i % 7) * 64, y: 150 + s * 124 + Math.floor(i / 7) * 28 })));
+    cells.push({ act: 'quit', label: 'Quit', x: 120, y: 410 }, { act: 'back', label: 'Backspace', x: 240, y: 410 }, { act: 'done', label: 'Done', x: 440, y: 410 });
+    return cells;
+  }
+  updateNaming(inp) {
+    const cells = this.namingCells(), c = cells[this.cur];
+    const move = (dx, dy) => {                      // la letra más cercana en esa dirección
+      let best = null, bd = 1e9;
+      for (let i = 0; i < cells.length; i++) {
+        const o = cells[i], ddx = o.x - c.x, ddy = o.y - c.y;
+        if (dx && Math.sign(ddx) !== dx) continue; if (dy && Math.sign(ddy) !== dy) continue;
+        if (dx && Math.abs(ddy) > 14) continue;
+        const d = dy ? Math.abs(ddy) * 4 + Math.abs(ddx) : Math.abs(ddx);
+        if (i !== this.cur && d < bd) { bd = d; best = i; }
+      }
+      if (best !== null) { this.cur = best; }
+    };
+    if (inp.left) move(-1, 0); if (inp.right) move(1, 0); if (inp.up) move(0, -1); if (inp.down) move(0, 1);
+    if (inp.cancel) { this.draft = this.draft.slice(0, -1); return; }
+    if (!inp.confirm) return;
+    if (c.ch) { if (this.draft.length < 6) this.draft += c.ch; return; }
+    if (c.act === 'back') this.draft = this.draft.slice(0, -1);
+    if (c.act === 'quit') { playSound('squeak'); this.page = 2; }
+    if (c.act === 'done') { SETTINGS.name = this.draft || 'Player'; saveSettings(); playSound('select'); this.page = 2; }
+  }
+
+  // ---------------------------------------------------------------- dibujo
   draw(ctx) {
     ctx.fillStyle = '#000'; ctx.fillRect(0, 0, 640, 480);
+    if (this.page === 2) return this.drawOptions(ctx);
+    if (this.page === 3) return this.drawNaming(ctx);
+    if (this.page === 0) this.drawDecor(ctx);
     drawText(ctx, 'fnt_main', this.page === 0 ? 'Bosses List' : BOSSES[this.boss].name, 24, 20, { mono: 16 });
     const list = this.items();
     list.slice(this.scroll, this.scroll + VISIBLE).forEach((it, k) => {
       const i = k + this.scroll;
-      // la pelea completa arriba y, tras un hueco, los ataques
-      const y = 90 + k * 32 + (this.page === 1 && i > 0 && this.scroll === 0 ? 16 : 0);
+      // pelea completa arriba y, tras un hueco, los ataques / Options separado de los jefes
+      const gap = (this.page === 1 && i > 0 && this.scroll === 0) || (this.page === 0 && it.options) ? 16 : 0;
+      const y = 90 + k * 32 + gap;
       drawText(ctx, 'fnt_main', it.label, 124, y, { mono: 16 });
       if (i === this.sel) drawSprite(ctx, 'spr_heart', 0, 84, y + 6);
     });
     if (this.scroll > 0) drawText(ctx, 'fnt_main', '^', 600, 90, { mono: 16, color: '#808080' });
     if (this.scroll + VISIBLE < list.length) drawText(ctx, 'fnt_main', 'v', 600, 90 + (VISIBLE - 1) * 32 + 16, { mono: 16, color: '#808080' });
-    if (this.page === 0) { drawText(ctx, 'fnt_maintext', 'DETERMINATION BATTLE SIMULATOR', 392, 28, { color: '#808080' }); this.drawCredits(ctx); }
   }
 
-  // Esquinas de la pantalla "Bosses List": aviso de fan-game (izquierda) y autor (derecha).
-  // Los enlaces se pueden pulsar con el ratón (main.js pone <a> invisibles encima de LINKS).
-  drawCredits(ctx) {
-    const f = 'fnt_maintext', grey = '#808080', yel = this.hover === 'undertale' ? '#fff' : '#ff0';
-    const x = 16;
-    drawText(ctx, f, 'This is a non-profit, fan-made tribute to UNDERTALE.', x, 400, { color: grey });
-    const w = drawText(ctx, f, 'UNDERTALE', x, 415, { color: grey });
-    drawRegistered(ctx, x + w + 1, 416, grey);
-    drawText(ctx, f, ' is owned by Toby Fox.', x + w + 8, 415, { color: grey });
-    drawText(ctx, f, 'Please support the official release:', x, 430, { color: grey });
-    drawSprite(ctx, 'spr_heart', 0, x, 447, { xs: 0.75, ys: 0.75 });
-    const w2 = drawText(ctx, f, 'Buy UNDERTALE at ', x + 18, 446, { color: '#fff' });
-    drawText(ctx, f, 'undertale.com', x + 18 + w2, 446, { color: yel });
-
-    const ax = 430, ay = 404, s = 50;                    // foto de GitHub con marco blanco, como la caja de batalla
-    ctx.fillStyle = '#fff'; ctx.fillRect(ax - 3, ay - 3, s + 6, s + 6);
-    ctx.fillStyle = '#000'; ctx.fillRect(ax - 1, ay - 1, s + 2, s + 2);
-    if (AVATAR.complete && AVATAR.naturalWidth) { ctx.save(); ctx.imageSmoothingEnabled = false; ctx.drawImage(AVATAR, ax, ay, s, s); ctx.restore(); }
-    const tx = ax + s + 12, gy = this.hover === 'github' ? '#fff' : '#ff0';
-    drawText(ctx, f, 'Made by:', tx, 402, { color: grey });
-    drawText(ctx, f, 'Gianfry (Giaxeri)', tx, 417, { color: '#fff' });
-    drawText(ctx, f, 'on Github!', tx, 432, { color: grey });
-    drawText(ctx, f, 'github.com/Giaxeri', tx, 447, { color: gy });
+  // Decoración del menú principal: caras y personajes del juego moviéndose un poco
+  drawDecor(ctx) {
+    const t = this.t;
+    if (t % 90 === 0) this.face = [0, 0, 0, 3, 5, 8, 10][Math.floor(Math.random() * 7)];   // Sans cambia de expresión de vez en cuando
+    drawSprite(ctx, 'spr_sansb_face', this.face, 540, 118 + Math.sin(t / 20) * 3, { xs: 2, ys: 2 });
+    drawSprite(ctx, 'spr_papyrusboss_head', 0, 452, 200 + Math.sin(t / 17 + 1) * 3);
+    drawSprite(ctx, 'spr_napstablook_d', 0, 560, 230 + Math.sin(t / 25) * 6, { xs: 2, ys: 2, alpha: 0.7 + Math.sin(t / 25) * 0.2 });
+    drawSprite(ctx, 'spr_floweynice', Math.floor(t / 15) % 2, 30, 360, { xs: 2, ys: 2 });
+    this.dogX += 1.2; if (this.dogX > 700) this.dogX = -140;                              // el perro molesto pasa arrastrándose
+    drawSprite(ctx, 'spr_tobydogscoot', Math.floor(t / 8) % 2, this.dogX, 408, { xs: 1.5, ys: 1.5 });
+    drawSprite(ctx, 'spr_sleepdog', Math.floor(t / 30) % 2, 560, 440, { xs: 2, ys: 2 });
   }
-}
 
-// Zonas clicables (coordenadas del lienzo de 640x480)
-export const LINKS = [
-  { id: 'undertale', href: 'https://undertale.com', title: 'Buy UNDERTALE at undertale.com', x: 16, y: 443, w: 230, h: 20 },
-  { id: 'github', href: 'https://github.com/Giaxeri', title: 'Gianfry (Giaxeri) on GitHub', x: 424, y: 398, w: 204, h: 64 },
-];
-const AVATAR = new Image();
-AVATAR.src = 'https://avatars.githubusercontent.com/u/149126315?s=100&v=4';   // foto de perfil de GitHub (Giaxeri)
+  drawOptions(ctx) {
+    drawText(ctx, 'fnt_main', 'Options', 24, 20, { mono: 16 });
+    const res = RESOLUTIONS.find(r => r.id === SETTINGS.res);
+    const rows = [['Resolution', `< ${res.label} >`], ['Name', SETTINGS.name], ['Back', '']];
+    rows.forEach(([a, b], i) => {
+      const y = 110 + i * 48;
+      drawText(ctx, 'fnt_main', a, 124, y, { mono: 16, color: this.opt === i ? '#ff0' : '#fff' });
+      if (b) drawText(ctx, 'fnt_main', b, 340, y, { mono: 16, color: this.opt === i ? '#ff0' : '#fff' });
+      if (this.opt === i) drawSprite(ctx, 'spr_heart', 0, 84, y + 6);
+    });
+    const help = ['Left / Right: change the size of the game.', 'Z on Name: choose the name used in battle.', 'X: go back.'];
+    help.forEach((s, i) => drawText(ctx, 'fnt_maintext', s, 124, 300 + i * 18, { color: '#808080' }));
+  }
 
-function drawRegistered(ctx, x, y, color) {           // la fuente del juego no trae el signo ®: lo dibujamos a mano
-  ctx.save(); ctx.strokeStyle = color; ctx.lineWidth = 1;
-  ctx.beginPath(); ctx.arc(x + 3.5, y + 3.5, 3.2, 0, Math.PI * 2); ctx.stroke();
-  ctx.fillStyle = color;
-  ctx.fillRect(x + 2, y + 2, 1, 4); ctx.fillRect(x + 3, y + 2, 2, 1); ctx.fillRect(x + 4, y + 3, 1, 1); ctx.fillRect(x + 3, y + 4, 1, 1); ctx.fillRect(x + 4, y + 5, 1, 1);
-  ctx.restore();
+  drawNaming(ctx) {
+    drawText(ctx, 'fnt_main', 'Name the fallen human.', 180, 60, { mono: 16 });
+    drawText(ctx, 'fnt_main', this.draft, 280, 108, { mono: 16 });
+    this.namingCells().forEach((c, i) => {
+      const jx = c.ch ? Math.round(Math.random() * 2 - 1) : 0, jy = c.ch ? Math.round(Math.random() * 2 - 1) : 0;   // las letras tiemblan, como en el juego
+      drawText(ctx, 'fnt_main', c.ch || c.label, c.x + jx, c.y + jy, { mono: 16, color: i === this.cur ? '#ff0' : '#fff' });
+    });
+    drawText(ctx, 'fnt_maintext', 'Up to 6 letters.', 24, 456, { color: '#808080' });
+  }
 }

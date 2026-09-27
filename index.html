@@ -19,10 +19,21 @@
 <meta name="twitter:title" content="Determination Battle Simulator">
 <meta name="twitter:description" content="Determination Battle Simulator: a free, fan-made UNDERTALE boss battle simulator in your browser. Fight Undyne the Undying, Muffet, Mettaton EX and Napstablook, or practice each attack.">
 <meta name="twitter:image" content="https://giaxeri.github.io/Determination-Battle-Simulator/assets/preview.png">
-<link rel="icon" href="assets/sprites/spr_heart_0.png">
+<link rel="icon" type="image/png" href="assets/icon.png">
 <style>
-  html,body{margin:0;height:100%;background:#000;display:flex;align-items:center;justify-content:center;overflow:hidden}
-  canvas{image-rendering:pixelated;image-rendering:crisp-edges;width:min(75vw,100vh);aspect-ratio:4/3}
+  html,body{margin:0;height:100%;background:#000;overflow:hidden}
+  #game{position:absolute;image-rendering:pixelated;image-rendering:crisp-edges}
+  .ui{position:absolute;display:block}
+  .px{image-rendering:pixelated;image-rendering:crisp-edges;display:block}
+  a.ui{text-decoration:none;cursor:pointer}
+  a.ui:hover{filter:brightness(1.25) drop-shadow(0 0 2px #ff0)}
+  .credits .avatar{position:absolute;box-sizing:border-box;border:3px solid #fff;background:#000}
+  .credits .avatar img{width:100%;height:100%;display:block;image-rendering:pixelated}
+  .credits canvas{position:absolute}
+  .vol{display:flex;flex-direction:column;align-items:center;user-select:none}
+  .vol .track{position:relative;box-sizing:content-box;border:3px solid #fff;background:#000;cursor:pointer;touch-action:none}
+  .vol .fill{position:absolute;left:0;right:0;bottom:0;background:#ff0}
+  .vol .knob{position:absolute;left:50%;transform:translateX(-50%);image-rendering:pixelated;pointer-events:none}
   .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 </style>
 </head>

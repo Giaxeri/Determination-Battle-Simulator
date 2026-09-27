@@ -1,5 +1,5 @@
 import { drawSprite, drawText, playSound, playMusic, stopMusic, setMusicVolume } from './assets.js';
-import { Battle, BORDER } from './battle.js';
+import { Battle, BORDER, playerAt } from './battle.js';
 import { Writer } from './text.js';
 import { rotBBox } from './gm.js';
 import { MettBody, Ratings } from './mettbody.js';
@@ -81,6 +81,16 @@ const BORDERS = { 0: [32, 602, 250, 385], 24: [235, 405, 250, 385], 26: [295, 34
 
 export class MettatonBattle extends Battle {
   constructor(single = null) { super(single); }
+
+  // Mettaton EX se suele pelear en la ruta pacifista (LV 1, 20 HP): Burnt Pan (cura +4) y Old Tutu.
+  // Objetos más usados: Glamburger y Legendary Hero (MTT Resort / Burgerpants); al público le encanta la marca.
+  playerSetup() { return playerAt(1, { name: 'Burnt Pan', atk: 10, healBonus: 4 }, { name: 'Old Tutu', def: 10 }); }
+  itemSetup() { return ['glam', 'glam', 'glam', 'glam', 'hero', 'hero']; }
+  itemText(key, msg) {                               // scr_itemuseb con obj_ratingsmaster
+    if (key === 'glam') { this.rat.add(10); return '* You eat the Glamburger.&* The audience loves the brand.'; }
+    if (key === 'hero') this.rat.add(9);
+    return msg;
+  }
 
   reset() {
     super.reset();

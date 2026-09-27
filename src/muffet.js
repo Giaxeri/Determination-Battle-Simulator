@@ -1,5 +1,5 @@
 import { drawSprite, drawText, playSound, playMusic, spriteBBox, SPR } from './assets.js';
-import { Battle, BORDER, Vapor } from './battle.js';
+import { Battle, BORDER, Vapor, playerAt } from './battle.js';
 import { Writer } from './text.js';
 import { MuffetBody } from './muffetbody.js';
 
@@ -351,8 +351,8 @@ class SignSpider {                             // obj_signspider: "Up Next" con 
     if (this.con === 1 || this.con === 2) {
       drawSprite(ctx, 'spr_tinyspider_sign', this.signimg, this.x, this.y, { xs: 2, ys: 2 });
       if (this.signimg >= 4 && this.con === 1) {
-        const w = drawText(ctx, 'fnt_small', 'Up Next', -999, -999);
-        drawText(ctx, 'fnt_small', 'Up Next', Math.round(this.x - w / 2), this.y - 106);
+        const w = drawText(ctx, 'fnt_maintext', 'Up Next', -999, -999);     // scr_setfont(2) + scr_drawtext_centered(x, y-100)
+        drawText(ctx, 'fnt_maintext', 'Up Next', Math.round(this.x - w / 2), this.y - 100);
         const n = this.signno, x = this.x, y = this.y - 70, spr = (s, dx) => drawSprite(ctx, s, 0, x + dx, y);
         if ([0, 1, 6, 10].includes(n)) spr('spr_spiderbullet1', 0);
         if (n === 8) spr('spr_croissantl', 0);
@@ -404,6 +404,11 @@ class PourDrop {  // cae hasta el fondo de la caja y suma 4 al "purple" del cuer
 export class MuffetBattle extends Battle {
   constructor(single = null) { super(single); }
 
+  // Muffet se suele pelear en la ruta pacifista (LV 1, 20 HP) con Ballet Shoes + Old Tutu de Waterfall.
+  // Objetos más usados antes de llegar: Hot Dog...? (puesto de Sans en Hotland) y Cinnamon Bunny (tienda de Snowdin).
+  playerSetup() { return playerAt(1, { name: 'Ballet Shoes', atk: 7 }, { name: 'Old Tutu', def: 10 }); }
+  itemSetup() { return ['hotdog', 'hotdog', 'hotdog', 'hotdog', 'bunny', 'bunny']; }
+
   reset() {
     super.reset();
     this.enemy = { hp: 1250, maxHp: 1250, atk: 8, def: 0, x: 214, y: 37, wd: 216 };   // scr_monstersetup tipo 39
@@ -430,7 +435,7 @@ export class MuffetBattle extends Battle {
     if (this.enemy.hp <= 0) this.startDeath(); else this.startEnemyTurn();
   }
   bubblePos() { return [214 + 110 + 60, 37 - 10]; }
-  newBubbleWriter() { const bl = this.bubble, [bx, by] = this.bubblePos(); bl.writer = new Writer(bl.msgs[bl.i], bx + 25, by + 10, TYPER33); }
+  newBubbleWriter() { const bl = this.bubble, [bx, by] = this.bubblePos(); bl.writer = new Writer(bl.msgs[bl.i], bx + 33, by + 10, TYPER33); }   // un poco más a la derecha para que no se corte con el borde del globo
   layer() { if (!this._layer) { this._layer = document.createElement('canvas'); this._layer.width = 640; this._layer.height = 480; } return this._layer; }
 
   ideal() {
@@ -470,6 +475,7 @@ export class MuffetBattle extends Battle {
     if (['mTalk', 'mPour', 'mAttack', 'mStory', 'mEnd'].includes(this.state)) {
       const h = this.pheart;
       if (h) { this.hx = h.x - 8; this.hy = h.y - 8; }
+      else if (this.redHeart && this.state === 'mPour') { this.hx = this.redHeart.x; this.hy = this.redHeart.y; drawSprite(ctx, this.soul, Math.floor(this.heartFrame), this.hx, this.hy); }
       else if (!this.heartFree && this.state !== 'mAttack') {   // alma normal en el centro de la caja
         const [l, r, t, b] = this.ideal(); this.hx = Math.round((l + r) / 2) - 8; this.hy = Math.round((t + b) / 2) - 8;
         drawSprite(ctx, this.soul, 0, this.hx, this.hy);
@@ -576,7 +582,9 @@ export class MuffetBattle extends Battle {
 
   beginAttack() {                              // mnfight = 2
     if (this.con === 0) {                      // primer turno: Muffet sirve té morado
-      this.body.startPour(); this.con = 1; this.go('mPour'); return;
+      this.body.startPour(); this.con = 1; this.go('mPour');
+      const [l, r, tp, bt] = this.ideal(); this.redHeart = { x: Math.round((l + r) / 2) - 8, y: Math.round((tp + bt) / 2) - 8 };   // el alma roja se puede mover mientras cae el té
+      return;
     }
     if (this.turnamt >= 20) { this.endTurn(); return; }   // después del telegrama ya no ataca
     const type = this.turnamt; this.turnamtNow = type;
@@ -625,10 +633,15 @@ export class MuffetBattle extends Battle {
   }
 
   updatePour(inp) {                            // té morado -> el alma se vuelve morada
+    if (this.redHeart && this.purpletime === 0) {
+      const rh = this.redHeart, [l, r, tp, bt] = this.ideal(), H = inp.held || {};
+      if (H.up) rh.y -= this.sp; if (H.down) rh.y += this.sp; if (H.left) rh.x -= this.sp; if (H.right) rh.x += this.sp;
+      rh.x = Math.min(Math.max(rh.x, l + 4), r - 16); rh.y = Math.min(Math.max(rh.y, tp + 4), bt - 16);
+    }
     const h = this.box.b - this.box.t;
     if (this.purple > 125 && this.body.mode === 1) this.body.mode = 0;
     if (this.purpletime === 0 && this.purple > h) {
-      this.purpletime = 1; this.soul = 'spr_heartpurple';
+      this.purpletime = 1; this.soul = 'spr_heartpurple'; this.redHeart = null;
       this.pheart = new PurpleHeart(this);
       this.later(60, () => {                   // con 2
         this.dialogue([T.purple], 33, () => { this.con = 4; this.flavor = T.trapped; this.endTurn(); });

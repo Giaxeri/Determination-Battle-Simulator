@@ -17,10 +17,13 @@ SPRITES = [r'^spr_undynex_', r'^spr_(fight|talk|item|spare)bt$', r'^spr_heart$',
            r'^spr_heartyellow_flip$', r'^spr_heartbullet$', r'^spr_plusbomb', r'^spr_blackbox_pl$', r'^spr_(rec|rew)box$', r'^spr_happybreaktime$',
            r'^spr_exclamationpoint$', r'^spr_tinysparkle$', r'^spr_tinydancemett', r'^spr_parasolmett$', r'^spr_kissbullet$', r'^spr_mettheart',
            r'^spr_discoball(_invert)?_pl$', r'^spr_mettlightning_pl$', r'^spr_mettlegbullet_[lr]$', r'^spr_yellowtrigger(_off)?_pl$',
-           r'^spr_metthand_(pl|r)$', r'^spr_starburst_x$', r'^spr_mettshine$', r'^spr_shockblcon2$', r'^spr_tsunderplanecloud$']
+           r'^spr_metthand_(pl|r)$', r'^spr_starburst_x$', r'^spr_mettshine$', r'^spr_shockblcon2$', r'^spr_tsunderplanecloud$',
+           # decoración del menú e icono de la página
+           r'^spr_sansb_face$', r'^spr_floweynice$', r'^spr_floweywink$', r'^spr_sleepdog$', r'^spr_tobydogscoot$', r'^spr_tembattle$', r'^spr_froggit$',
+           r'^spr_papyrusboss_head$', r'^spr_napstablook_d$', r'^spr_heartshards$']
 SOUNDS = ['SND_TXT1', 'snd_hurtgirl', 'snd_txtund_hyper', 'snd_vaporized', 'snd_swallow', 'snd_power', 'snd_speedup', 'snd_spearappear', 'snd_spearrise', 'snd_arrow', 'snd_impact', 'snd_bell', 'snd_hurt1', 'snd_damage', 'snd_laz', 'snd_select', 'snd_squeak', 'SND_TXT2',
           'snd_mtt1', 'snd_mtt2', 'snd_mtt3', 'snd_mtt4', 'snd_mtt5', 'snd_mtt6', 'snd_mtt7', 'snd_mtt8', 'snd_mtt9', 'snd_heartshot', 'snd_mtt_hit',
-          'snd_mtt_prebomb', 'snd_mtt_burst', 'snd_bomb', 'snd_noise', 'snd_block2', 'snd_phone', 'snd_heavydamage', 'snd_yeah', 'mus_explosion']
+          'snd_mtt_prebomb', 'snd_mtt_burst', 'snd_bomb', 'snd_noise', 'snd_block2', 'snd_phone', 'snd_heavydamage', 'snd_yeah', 'mus_explosion', 'snd_break1', 'snd_break2', 'snd_dogsalad']
 FONTS = ['fnt_main', 'fnt_curs', 'fnt_small', 'fnt_dmg', 'fnt_plain', 'fnt_maintext']
 
 def main(src, out):

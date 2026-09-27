@@ -11,6 +11,20 @@ Made by Gianfry ([Giaxeri](https://github.com/Giaxeri)). Jefes: Undyne the Undyi
 Recreación fan (no comercial) del combate contra Undyne the Undying de UNDERTALE, en HTML5 Canvas + JavaScript.
 UNDERTALE y sus assets pertenecen a Toby Fox. Los assets de `assets/` se extraen de tu propia copia del juego.
 
+
+## Novedades
+- **Options** en el menú principal: resolución (Small / Default / Large) y nombre del jugador para los combates (hasta 6 letras, como al empezar el juego; por defecto "Player").
+- Barra de **volumen** arrastrable (con el número) a la derecha del combate; M silencia.
+- Título, aviso de fan-game, créditos y "Press ESC to return to the menu" van fuera del área de combate y escalan con la resolución.
+- Al morir: la música se corta, el alma se parte (snd_break1) y estalla en pedazos (snd_break2); después vuelves a la lista del jefe.
+- Cada jefe usa las estadísticas y objetos más habituales en esa parte del juego:
+  | Jefe | LV / HP | Arma / Armadura | Objetos (pág. 1 / pág. 2) |
+  |---|---|---|---|
+  | Undyne the Undying | 10 / 56 | Toy Knife / Faded Ribbon | 4 Astronaut Food / 2 Sea Tea |
+  | Muffet | 1 / 20 | Ballet Shoes / Old Tutu | 4 Hot Dog...? / 2 Cinnamon Bunny |
+  | Mettaton EX | 1 / 20 | Burnt Pan / Old Tutu | 4 Glamburger / 2 Legendary Hero |
+  | Napstablook | 1 / 20 | Stick / Bandage | 2 Monster Candy + 1 Spider Donut |
+
 ## Extraer assets
     python3 tools/extract.py "C:/Program Files (x86)/Steam/steamapps/common/Undertale/data.win" assets
 (necesita Python 3 + Pillow). La música (`mus_x_undyne*.ogg`) se copia de la carpeta del juego a `assets/audio/`.

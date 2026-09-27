@@ -1,5 +1,5 @@
 import { drawSprite, drawText, playSound, playMusic, stopMusic, spriteBBox, SPR } from './assets.js';
-import { Battle, BORDER } from './battle.js';
+import { Battle, BORDER, playerAt } from './battle.js';
 import { Writer } from './text.js';
 
 // ============================================================================
@@ -200,6 +200,10 @@ class NapstaAttack {
 export class NapstablookBattle extends Battle {
   constructor(single = null) { super(single); }
 
+  // Napstablook: Ruinas, LV 1 y 20 HP con el Stick y la Bandage. En las Ruinas solo hay Monster Candy y Spider Donut.
+  playerSetup() { return playerAt(1, { name: 'Stick', atk: 0 }, { name: 'Bandage', def: 0 }); }
+  itemSetup() { return ['candy', 'candy', 'donut']; }
+
   reset() {
     super.reset();
     this.enemy = { hp: 88, maxHp: 88, atk: 5, def: 4, x: NX, y: NY, wd: NW };   // scr_monstersetup tipo 11
@@ -225,7 +229,7 @@ export class NapstablookBattle extends Battle {
     const p = this.player, amt = Math.max(1, Math.round(dmg - (p.df + p.armor.def) / 5));
     p.hp = Math.max(0, p.hp - amt);
     playSound('hurt'); this.shake = 2; this.invc = 20;
-    if (p.hp <= 0) { this.go('gameover'); this.attack = null; }
+    if (p.hp <= 0) this.gameOver();
   }
 
   // Globo pequeño (obj_blconsm) con el texto de Napstablook; se cierra solo
@@ -381,7 +385,6 @@ export class NapstablookBattle extends Battle {
 
   // ---------------------------------------------------------------- dibujo
   drawEnemy(ctx) {
-    drawSprite(ctx, 'spr_battlebg', 1, 0, 0);     // obj_battlebg.image_index = 1: la cuadrícula verde
     drawSprite(ctx, 'spr_napstabattle', Math.floor(this.frame), NX, NY, { xs: 2, ys: 2, alpha: this.alpha });
   }
   drawExtra(ctx) {

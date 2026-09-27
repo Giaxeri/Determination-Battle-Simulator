@@ -1,4 +1,5 @@
 import { drawSprite, drawText, playSound, playMusic, stopMusic, SPR } from './assets.js';
+import { SETTINGS } from './settings.js';
 import { UndyneBody } from './undyne.js';
 import { Writer, TYPER_UNDYNE } from './text.js';
 import { GreenAttack } from './green.js';
@@ -19,11 +20,22 @@ const TXT = {
   death3: ['This world will&live on...!/%%'],
 };
 
-// Objetos (item_name / item_names / item_use de textdata_en). Astronaut Food cura 21, Sea Tea cura 10 y sube la velocidad.
-const ITEMS = {
+// Objetos (item_name / item_name_short / item_use de textdata_en; curación de scr_itemuseb).
+// Cada jefe lleva los objetos más usados en esa parte del juego: 4 del que menos cura (página 1) y 2 del que más (página 2).
+export const ITEMS = {
   astro: { name: 'Astronaut Food', short: 'Astr.Food', heal: 21, use: '* You eat the Astronaut Food.' },
   seatea: { name: 'Sea Tea', short: 'Sea Tea', heal: 10, use: '* You drink the Sea Tea.', speed: true },
+  candy: { name: 'Monster Candy', short: 'MnstrCndy', heal: 10, use: '* You ate the Monster Candy.', candy: true },
+  donut: { name: 'Spider Donut', short: 'SpdrDonut', heal: 12, use: '* You ate the Spider Donut.', donut: true },
+  hotdog: { name: 'Hot Dog...?', short: 'Hot Dog', heal: 20, use: '* You eat the Hot Dog...?', sound2: 'dogsalad' },
+  bunny: { name: 'Cinnamon Bunny', short: 'C. Bun', heal: 22, use: '* You eat the Cinnamon Bunny.' },
+  glam: { name: 'Glamburger', short: 'G. Burger', heal: 27, use: '* You eat the Glamburger.' },
+  hero: { name: 'Legendary Hero', short: 'L. Hero', heal: 40, use: '* You eat the Legendary Hero.', atk: 4 },
 };
+// Estadísticas del jugador (LV: maxhp = 16+lv*4, at = 8+lv*2, df = 9+ceil(lv/4)) con su arma y armadura
+export function playerAt(lv, weapon, armor, extra = {}) {
+  return { name: SETTINGS.name || 'Player', lv, hp: 16 + lv * 4, maxHp: 16 + lv * 4, at: 8 + lv * 2, df: 9 + Math.ceil(lv / 4), weapon, armor, ...extra };
+}
 
 // Cajas de batalla (SCR_BORDERSETUP): [izq, der, arriba, abajo]
 const BORDER = { 0: [32, 602, 250, 385], 7: [227, 407, 200, 385], 12: [280, 360, 200, 280], 13: [280, 360, 250, 385],
@@ -31,23 +43,21 @@ const BORDER = { 0: [32, 602, 250, 385], 7: [227, 407, 200, 385], 12: [280, 360,
 const BUTTONS = [['spr_fightbt', 32], ['spr_talkbt', 185], ['spr_itembt', 345], ['spr_sparebt', 500]];
 const GREEN = 'spr_heartgreen', RED = 'spr_heart';
 
-export { BORDER, BUTTONS, TXT, ITEMS, DmgWriter, Slice, Target, Vapor };
+export { BORDER, BUTTONS, TXT, DmgWriter, Slice, Target, Vapor };
 
 export class Battle {
   // single = un ataque de ATTACKS para practicarlo solo (se repite cada turno); null = la pelea completa
   constructor(single = null) { this.single = single; this.reset(); }
 
   reset() {
-    // Jugador (LV 10: maxhp = 16+lv*4, at = 8+lv*2, df = 9+ceil(lv/4))
-    this.player = { name: 'Gianfry', lv: 10, hp: 56, maxHp: 56, at: 28, df: 12,
-                    weapon: { name: 'Toy Knife', atk: 3, knife: true }, armor: { name: 'Faded Ribbon', def: 3 } };
+    this.player = this.playerSetup();
+    this.inventory = this.itemSetup();
     this.invc = 0;
     // Undyne the Undying (scr_monstersetup, tipo 65) y su estado de combate (obj_undyne_ex Create)
     this.enemy = { hp: 23000, maxHp: 23000, atk: 12, def: 5, x: 210, y: 20, wd: 200 };
     this.body = new UndyneBody(210, 20);
     this.order = 1; this.orderb = 0; this.lesson = -5; this.rating = 9; this.ratingb = 0; this.hitno = 0;
     this.firingrate = 15;
-    this.inventory = ['astro', 'astro', 'astro', 'astro', 'seatea', 'seatea'];   // página 1: 4 Astronaut Food, página 2: 2 Sea Tea
     this.sp = 4;                                 // velocidad del alma roja (global.sp); el Sea Tea la sube
     this.itemPage = 0; this.itemPos = 0;
     this.con = 0; this.melter = null; this.dust = null; this.fadeOut = 0;
@@ -63,6 +73,10 @@ export class Battle {
     this.soul = RED;                             // empieza roja; Undyne la vuelve verde al comenzar
     this.jobs = [];
   }
+
+  // Jugador e inventario de cada jefe (Undyne the Undying: LV 10, Toy Knife + Faded Ribbon)
+  playerSetup() { return playerAt(10, { name: 'Toy Knife', atk: 3, knife: true }, { name: 'Faded Ribbon', def: 3 }); }
+  itemSetup() { return ['astro', 'astro', 'astro', 'astro', 'seatea', 'seatea']; }   // página 1: 4 Astronaut Food, página 2: 2 Sea Tea
 
   // ---------------------------------------------------------------- helpers
   setBorder(n) { this.border = n; }
@@ -134,7 +148,7 @@ export class Battle {
     const amt = Math.max(1, Math.round(dmg - (p.df + p.armor.def) / 5));
     p.hp = Math.max(minHp, p.hp - amt);
     playSound('hurt'); this.shake = 2; this.invc = 20;
-    if (p.hp <= 0) { this.go('gameover'); this.attack = null; }
+    if (p.hp <= 0) this.gameOver();
   }
 
   // ---------------------------------------------------------------- update
@@ -190,7 +204,7 @@ export class Battle {
       if (this.soul === GREEN) this.heart = { x: 312, y: this.box.t + 34 };
       if (this.timer >= 10) { if (this.dark > 0) this.darkify = 3; this.flavor = TXT.flavor; this.startMenu(); }
     }
-    else if (S === 'gameover' && this.timer > 100) this.reset();
+    else if (S === 'gameover') this.updateGameOver();
     this.shake = Math.max(0, this.shake - 0.34);
   }
 
@@ -314,18 +328,55 @@ export class Battle {
   }
 
   useItem(i) {                                   // scr_itemuseb + scr_recoitem
-    const it = ITEMS[this.inventory[i]], p = this.player;
+    const key = this.inventory[i], it = ITEMS[key], p = this.player;
     this.inventory.splice(i, 1);                 // los demás objetos suben un puesto (scr_itemshift)
     let msg = it.use;
+    if (it.candy) { const r = Math.round(Math.random() * 15); if (r <= 2) msg += ' &* Very un-licorice-like.'; if (r === 15) msg += ' &* ... tastes like licorice.'; }
+    if (it.donut && Math.ceil(Math.random() * 10) > 9) msg = "* Don't worry^1, Spider didn't.";
+    msg = this.itemText(key, msg);
     playSound('swallow');
     if (it.speed) {
       if (this.sp < 8) { this.sp++; msg += '&* Your SPEED boosts!'; }
       this.later(10, () => playSound('speedup'));
-    } else this.later(10, () => playSound('power'));
-    p.hp = Math.min(p.maxHp, p.hp + it.heal);
-    msg += p.hp >= p.maxHp ? '&* Your HP was maxed out./' : `&* You recovered ${it.heal} HP!/`;
+    } else this.later(10, () => playSound(it.sound2 || 'power'));
+    if (it.atk && p.at < 150) { p.at += it.atk; msg += '&* ATTACK increased by 4!'; }
+    const heal = it.heal + (p.weapon.healBonus || 0);          // la Burnt Pan cura 4 más
+    p.hp = Math.min(p.maxHp, p.hp + heal);
+    msg += p.hp >= p.maxHp ? '&* Your HP was maxed out./' : `&* You recovered ${heal} HP!/`;
     this.writer = new Writer(msg, BORDER[0][0], BORDER[0][2]);
     this.go('actText');
+  }
+  itemText(key, msg) { return msg; }             // cada jefe puede cambiar el texto (p. ej. Mettaton y el público)
+
+  // ---------------------------------------------------------------- muerte: el alma se rompe (obj_heartdefeated)
+  gameOver() {
+    if (this.state === 'gameover') return;
+    stopMusic();                                 // la música se corta en cuanto la vida llega a 0
+    if (this.stopAllSounds) this.stopAllSounds();
+    this.attack = null; this.bubble = null; this.writer = null; this.jobs = [];
+    this.go('gameover');
+    this.dead = { x: this.hx ?? 312, y: this.hy ?? 300, spr: 'spr_heart', shards: [], fade: 0 };
+  }
+  updateGameOver() {
+    const d = this.dead, t = this.timer;
+    if (t === 20) { playSound('break1'); d.spr = 'spr_heartbreak'; d.x -= 2; }             // Alarm_0: se parte
+    if (t === 60) {                                                                         // Alarm_1: estalla en pedacitos
+      playSound('break2'); d.spr = null;
+      for (const [dx, dy] of [[-2, 0], [0, 3], [2, 6], [8, 0], [10, 3], [12, 6]]) {
+        const dir = Math.random() * Math.PI * 2;
+        d.shards.push({ x: d.x + dx, y: d.y + dy, hs: Math.cos(dir) * 7, vs: -Math.sin(dir) * 7, f: 0 });
+      }
+    }
+    for (const s of d.shards) { s.vs += 0.2; s.x += s.hs; s.y += s.vs; s.f += 0.25; }
+    if (t > 110) d.fade += 0.05;
+    if (d.fade >= 1 && !d.left) { d.left = true; if (this.onExit) this.onExit(); else this.reset(); }   // vuelve a la lista del jefe
+  }
+  drawGameOver(ctx) {
+    const d = this.dead;
+    ctx.fillStyle = '#000'; ctx.fillRect(0, 0, 640, 480);
+    if (d.spr) drawSprite(ctx, d.spr, 0, d.x, d.y);
+    for (const s of d.shards) drawSprite(ctx, 'spr_heartshards', Math.floor(s.f) % 4, s.x, s.y);
+    if (d.fade > 0) { ctx.fillStyle = `rgba(0,0,0,${Math.min(1, d.fade)})`; ctx.fillRect(0, 0, 640, 480); }
   }
 
   // ---------------------------------------------------------------- final de Undyne (obj_undyne_ex con 50...74)
@@ -391,6 +442,7 @@ export class Battle {
 
   // ---------------------------------------------------------------- draw
   draw(ctx) {
+    if (this.state === 'gameover') return this.drawGameOver(ctx);
     ctx.fillStyle = '#000'; ctx.fillRect(0, 0, 640, 480);
     ctx.save();
     if (this.shake > 0) ctx.translate(Math.round((Math.random() * 2 - 1) * this.shake), Math.round((Math.random() * 2 - 1) * this.shake));
@@ -406,7 +458,6 @@ export class Battle {
     this.drawField(ctx);
     ctx.restore();
     if (this.fadeOut > 0) { ctx.fillStyle = `rgba(0,0,0,${Math.min(1, this.fadeOut)})`; ctx.fillRect(0, 0, 640, 480); }
-    if (this.state === 'gameover') { ctx.fillStyle = '#000'; ctx.fillRect(0, 0, 640, 480); drawSprite(ctx, 'spr_heartbreak', 0, this.hx - 2, this.hy); }
   }
 
   drawEnemy(ctx) {
