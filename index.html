@@ -1,17 +1,47 @@
 <!doctype html>
-<html lang="es">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Determination Battle Simulator</title>
-<meta name="description" content="Non-profit, fan-made UNDERTALE boss battle simulator (Undyne the Undying, Muffet, Mettaton EX, Napstablook).">
+<meta name="google-site-verification" content="WLh5Lxj2oG5yc9Q2jCg-CfZjhV4YbEc0VCEe9XIAXxQ" />
+<meta name="description" content="Determination Battle Simulator: a free, fan-made UNDERTALE boss battle simulator in your browser. Fight Undyne the Undying, Muffet, Mettaton EX and Napstablook, or practice each attack.">
+<meta name="keywords" content="Determination Battle Simulator, UNDERTALE, boss battle simulator, Undyne the Undying, Muffet, Mettaton EX, Napstablook, fan game">
+<meta name="author" content="Gianfry (Giaxeri)">
+<link rel="canonical" href="https://giaxeri.github.io/Determination-Battle-Simulator/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Determination Battle Simulator">
+<meta property="og:title" content="Determination Battle Simulator">
+<meta property="og:description" content="Determination Battle Simulator: a free, fan-made UNDERTALE boss battle simulator in your browser. Fight Undyne the Undying, Muffet, Mettaton EX and Napstablook, or practice each attack.">
+<meta property="og:url" content="https://giaxeri.github.io/Determination-Battle-Simulator/">
+<meta property="og:image" content="https://giaxeri.github.io/Determination-Battle-Simulator/assets/preview.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Determination Battle Simulator">
+<meta name="twitter:description" content="Determination Battle Simulator: a free, fan-made UNDERTALE boss battle simulator in your browser. Fight Undyne the Undying, Muffet, Mettaton EX and Napstablook, or practice each attack.">
+<meta name="twitter:image" content="https://giaxeri.github.io/Determination-Battle-Simulator/assets/preview.png">
 <link rel="icon" href="assets/sprites/spr_heart_0.png">
 <style>
   html,body{margin:0;height:100%;background:#000;display:flex;align-items:center;justify-content:center;overflow:hidden}
   canvas{image-rendering:pixelated;image-rendering:crisp-edges;width:min(75vw,100vh);aspect-ratio:4/3}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 </style>
 </head>
 <body>
+<!-- Texto para buscadores y lectores de pantalla (el juego se dibuja en el canvas) -->
+<main class="sr-only">
+<h1>Determination Battle Simulator</h1>
+<p>A free, non-profit, fan-made UNDERTALE boss battle simulator that runs in your browser, in the style of the Sans Battle Simulator.
+Fight the full battles or practice each attack on its own. Controls: arrow keys, Z to confirm, X to cancel.</p>
+<h2>Bosses</h2>
+<ul>
+<li>Undyne the Undying - Battle Against a True Hero</li>
+<li>Muffet - Spider Dance</li>
+<li>Mettaton EX - Death by Glamour</li>
+<li>Napstablook - Ghost Fight</li>
+</ul>
+<p>This is a non-profit, fan-made tribute to UNDERTALE. UNDERTALE&reg; is owned by Toby Fox. Please support the official release: buy UNDERTALE at <a href="https://undertale.com">undertale.com</a>.</p>
+<p>Made by Gianfry (<a href="https://github.com/Giaxeri">Giaxeri on GitHub</a>). Source code: <a href="https://github.com/Giaxeri/Determination-Battle-Simulator">github.com/Giaxeri/Determination-Battle-Simulator</a>.</p>
+</main>
 <canvas id="game" width="640" height="480"></canvas>
 <script type="module" src="src/main.js"></script>
 </body>

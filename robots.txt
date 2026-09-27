@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://giaxeri.github.io/Determination-Battle-Simulator/sitemap.xml
