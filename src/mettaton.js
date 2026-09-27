@@ -1,6 +1,7 @@
 import { drawSprite, drawText, playSound, playMusic, stopMusic, setMusicVolume } from './assets.js';
 import { Battle, BORDER, playerAt } from './battle.js';
 import { Writer } from './text.js';
+import { texts, tr } from './i18n.js';
 import { rotBBox } from './gm.js';
 import { MettBody, Ratings } from './mettbody.js';
 import { MettGen, Shot, Essay } from './mettbullets.js';
@@ -30,8 +31,9 @@ const TYPER = {                                    // SCR_TEXTTYPE
 };
 
 // Textos (textdata_en, obj_mettatonex / obj_essaystuff)
-const T = {
+const T = texts('mettaton', {
   intro: '* Mettaton EX makes his premiere!',
+  glam: '* You eat the Glamburger.&* The audience loves the brand.',
   check: '* METTATON EX - ATK 47 DEF 47&* His weak point is his&  heart-shaped core./^',
   boast: ["* You say you aren't going&  to get hit at ALL./", "* Ratings gradually increase&  during Mettaton's turn./^"],
   heel: ['* You turn and scoff at the&  audience./', "* They're rooting for your&  destruction this turn!/^"],
@@ -75,7 +77,7 @@ const T = {
              "IT'S ALL FOR THE&BEST^1, ANYWAY./", "\\E3THE TRUTH IS^1, THIS&FORM'S ENERGY&CONSUMPTION IS.../", 'INEFFICIENT./',
              "IN A FEW MOMENTS^1,&I'LL RUN OUT OF&BATTERY POWER^1, AND.../", '\\E4WELL./', "\\E0I'LL BE ALRIGHT./", "\\E5KNOCK 'EM DEAD^1,&DARLING./",
              '\\E0AND EVERYONE..^1.&THANK YOU./', "YOU'VE BEEN A&GREAT AUDIENCE!/%%"],
-};
+});
 const MX = 210, MY = 60;                           // obj_mettatonex (scr_battlegroup)
 const BORDERS = { 0: [32, 602, 250, 385], 24: [235, 405, 250, 385], 26: [295, 345, 250, 385], 27: [270, 370, 250, 385] };
 
@@ -87,7 +89,7 @@ export class MettatonBattle extends Battle {
   playerSetup() { return playerAt(1, { name: 'Burnt Pan', atk: 10, healBonus: 4 }, { name: 'Old Tutu', def: 10 }); }
   itemSetup() { return ['glam', 'glam', 'glam', 'glam', 'hero', 'hero']; }
   itemText(key, msg) {                               // scr_itemuseb con obj_ratingsmaster
-    if (key === 'glam') { this.rat.add(10); return '* You eat the Glamburger.&* The audience loves the brand.'; }
+    if (key === 'glam') { this.rat.add(10); return T.glam; }
     if (key === 'hero') this.rat.add(9);
     return msg;
   }
@@ -145,8 +147,8 @@ export class MettatonBattle extends Battle {
         ctx.fillStyle = '#f00'; ctx.fillRect(bx, y + 5, w, 17); ctx.fillStyle = '#0f0'; ctx.fillRect(bx, y + 5, hp, 17);
       }
     }
-    if (this.state === 'actList') { line('   * Check'); line('   * Boast', 256); line('   * Pose', 0, 32); line('   * Heel Turn', 256, 32); }
-    if (this.state === 'mercyList') line('   * Spare');
+    if (this.state === 'actList') { line('   * ' + tr('Check')); line('   * ' + tr('Boast'), 256); line('   * ' + tr('Pose'), 0, 32); line('   * ' + tr('Heel Turn'), 256, 32); }
+    if (this.state === 'mercyList') line('   * ' + tr('Spare'));
     if (this.state === 'itemList') super.drawSubmenu(ctx);
   }
   updateSub(inp) {

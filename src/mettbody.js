@@ -1,4 +1,5 @@
 import { drawSprite, drawText, playSound, FNT } from './assets.js';
+import { tr } from './i18n.js';
 import { rnd, choose, gmMove } from './gm.js';
 
 // ============================================================================
@@ -208,18 +209,18 @@ export class Ratings {
     if (!this.active) return;
     const { x, y } = this, s = this.siner;
     ctx.save(); ctx.translate(x + 20 + Math.sin(s / 4), y + Math.cos(s / 4)); ctx.scale(2 - Math.sin(s / 4) * 0.05, 2 - Math.cos(s / 4) * 0.05);
-    drawText(ctx, 'fnt_maintext', 'RATINGS ' + Math.round(this.ratings), 0, 0);
+    drawText(ctx, 'fnt_maintext', tr('RATINGS') + ' ' + Math.round(this.ratings), 0, 0);
     ctx.restore();
     for (let i = 0; i < 6; i++) {
       const q = this.rq[i];
       q.s += (i + 2) / 2;
       const val = q.v >= 0 ? '+' + q.v : String(q.v), col = q.v >= 0 ? '#0f0' : '#f00';
       ctx.save(); if (q.s > 120) ctx.globalAlpha = Math.max(0, (170 - q.s) / 50);
-      const w = q.t ? textWidth(q.t) : 0, sx = w > 70 ? 70 / w : 1, spos = Math.round(130 - w * sx);
+      const qt = q.t ? tr(q.t) : '', w = qt ? textWidth(qt) : 0, sx = w > 70 ? 70 / w : 1, spos = Math.round(130 - w * sx);
       const xx = q.s < 10 ? Math.cos(q.s) * 21 / (q.s * 2 + 1) : 0;
       if (q.t) {
         ctx.save(); ctx.translate(x + spos + xx, y + 140 + i * 12); ctx.scale(sx, 1);
-        drawText(ctx, 'fnt_maintext', q.t, 0, 0, { color: col }); ctx.restore();
+        drawText(ctx, 'fnt_maintext', qt, 0, 0, { color: col }); ctx.restore();
         drawText(ctx, 'fnt_maintext', val, x + 130 + xx, y + 140 + i * 12, { color: col });
       }
       ctx.restore();

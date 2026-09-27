@@ -3,13 +3,14 @@ import { ATTACKS } from './attacks.js';
 import { MUFFET_ATTACKS } from './muffet.js';
 import { NAPSTA_ATTACKS } from './napstablook.js';
 import { METT_ATTACKS } from './mettaton.js';
-import { SETTINGS, saveSettings, RESOLUTIONS } from './settings.js';
-import { layout } from './ui.js';
+import { SETTINGS, saveSettings, RESOLUTIONS, LANGS } from './settings.js';
+import { layout, refreshTexts } from './ui.js';
+import { tr, playerName } from './i18n.js';
 
 // Menús de inicio al estilo "Select your bad time": texto blanco sobre negro y el alma roja como cursor.
 //   Página 0: Bosses List (+ Options)
 //   Página 1: la pelea completa de un jefe y debajo cada ataque por separado
-//   Página 2: Options (resolución y nombre)    Página 3: nombrar al humano (como al empezar el juego)
+//   Página 2: Options (resolución, idioma y nombre)    Página 3: nombrar al humano (como al empezar el juego)
 export const BOSSES = [
   { name: 'Undyne the Undying', id: 'undyne', full: 'Battle Against a True Hero', attacks: ATTACKS },
   { name: 'Muffet', id: 'muffet', full: 'Spider Dance', attacks: MUFFET_ATTACKS },
@@ -27,10 +28,10 @@ export class BossMenu {
   }
 
   items() {
-    if (this.page === 0) return [...BOSSES.map(b => ({ label: b.name })), { label: 'Options', options: true }];
+    if (this.page === 0) return [...BOSSES.map(b => ({ label: tr(b.name) })), { label: tr('Options'), options: true }];
     const B = BOSSES[this.boss];
-    return [{ label: B.full, mode: 'battle', boss: B.id },
-            ...B.attacks.map(a => ({ label: a.name, mode: 'single', attack: a, boss: B.id }))];
+    return [{ label: tr(B.full), mode: 'battle', boss: B.id },
+            ...B.attacks.map(a => ({ label: tr(a.name), mode: 'single', attack: a, boss: B.id }))];
   }
 
   update(inp) {
@@ -59,15 +60,20 @@ export class BossMenu {
   updateOptions(inp) {
     const back = () => { this.page = 0; this.sel = BOSSES.length; playSound('squeak'); };
     if (inp.cancel) return back();
-    if (inp.up) { this.opt = (this.opt + 2) % 3; playSound('squeak'); }
-    if (inp.down) { this.opt = (this.opt + 1) % 3; playSound('squeak'); }
+    if (inp.up) { this.opt = (this.opt + 3) % 4; playSound('squeak'); }
+    if (inp.down) { this.opt = (this.opt + 1) % 4; playSound('squeak'); }
     if (this.opt === 0 && (inp.left || inp.right || inp.confirm)) {       // resolución: Small / Default / Large
       const i = RESOLUTIONS.findIndex(r => r.id === SETTINGS.res), d = inp.left ? -1 : 1;
       SETTINGS.res = RESOLUTIONS[(i + d + RESOLUTIONS.length) % RESOLUTIONS.length].id;
       saveSettings(); layout(); playSound(inp.confirm ? 'select' : 'squeak');
     }
-    if (this.opt === 1 && inp.confirm) { playSound('select'); this.page = 3; this.draft = SETTINGS.name === 'Player' ? '' : SETTINGS.name; this.cur = 0; }
-    if (this.opt === 2 && inp.confirm) { playSound('select'); back(); }
+    if (this.opt === 1 && (inp.left || inp.right || inp.confirm)) {       // idioma: English / Español
+      const i = LANGS.findIndex(l => l.id === SETTINGS.lang), d = inp.left ? -1 : 1;
+      SETTINGS.lang = LANGS[(i + d + LANGS.length) % LANGS.length].id;
+      saveSettings(); refreshTexts(); playSound(inp.confirm ? 'select' : 'squeak');
+    }
+    if (this.opt === 2 && inp.confirm) { playSound('select'); this.page = 3; this.draft = SETTINGS.name === 'Player' ? '' : SETTINGS.name; this.cur = 0; }
+    if (this.opt === 3 && inp.confirm) { playSound('select'); back(); }
   }
 
   // ---------------------------------------------------------------- nombre (obj_naming): letras + Quit / Backspace / Done
@@ -75,7 +81,7 @@ export class BossMenu {
     const cells = [];
     [UPPER, LOWER].forEach((set, s) => [...set].forEach((ch, i) =>
       cells.push({ ch, x: 120 + (i % 7) * 64, y: 150 + s * 124 + Math.floor(i / 7) * 28 })));
-    cells.push({ act: 'quit', label: 'Quit', x: 120, y: 410 }, { act: 'back', label: 'Backspace', x: 240, y: 410 }, { act: 'done', label: 'Done', x: 440, y: 410 });
+    cells.push({ act: 'quit', label: tr('Quit'), x: 120, y: 410 }, { act: 'back', label: tr('Backspace'), x: 240, y: 410 }, { act: 'done', label: tr('Done'), x: 440, y: 410 });
     return cells;
   }
   updateNaming(inp) {
@@ -106,7 +112,7 @@ export class BossMenu {
     if (this.page === 2) return this.drawOptions(ctx);
     if (this.page === 3) return this.drawNaming(ctx);
     if (this.page === 0) this.drawDecor(ctx);
-    drawText(ctx, 'fnt_main', this.page === 0 ? 'Bosses List' : BOSSES[this.boss].name, 24, 20, { mono: 16 });
+    drawText(ctx, 'fnt_main', this.page === 0 ? tr('Bosses List') : tr(BOSSES[this.boss].name), 24, 20, { mono: 16 });
     const list = this.items();
     list.slice(this.scroll, this.scroll + VISIBLE).forEach((it, k) => {
       const i = k + this.scroll;
@@ -134,26 +140,27 @@ export class BossMenu {
   }
 
   drawOptions(ctx) {
-    drawText(ctx, 'fnt_main', 'Options', 24, 20, { mono: 16 });
-    const res = RESOLUTIONS.find(r => r.id === SETTINGS.res);
-    const rows = [['Resolution', `< ${res.label} >`], ['Name', SETTINGS.name], ['Back', '']];
+    drawText(ctx, 'fnt_main', tr('Options'), 24, 20, { mono: 16 });
+    const res = RESOLUTIONS.find(r => r.id === SETTINGS.res), lang = LANGS.find(l => l.id === SETTINGS.lang);
+    const rows = [[tr('Resolution'), `< ${tr(res.label)} >`], [tr('Language'), `< ${lang.label} >`], [tr('Name'), playerName()], [tr('Back'), '']];
     rows.forEach(([a, b], i) => {
       const y = 110 + i * 48;
       drawText(ctx, 'fnt_main', a, 124, y, { mono: 16, color: this.opt === i ? '#ff0' : '#fff' });
       if (b) drawText(ctx, 'fnt_main', b, 340, y, { mono: 16, color: this.opt === i ? '#ff0' : '#fff' });
       if (this.opt === i) drawSprite(ctx, 'spr_heart', 0, 84, y + 6);
     });
-    const help = ['Left / Right: change the size of the game.', 'Z on Name: choose the name used in battle.', 'X: go back.'];
-    help.forEach((s, i) => drawText(ctx, 'fnt_maintext', s, 124, 300 + i * 18, { color: '#808080' }));
+    const help = ['Left / Right: change the size of the game.', 'Left / Right on Language: English / Español.', 'Z on Name: choose the name used in battle.', 'X: go back.'];
+    help.forEach((s, i) => drawText(ctx, 'fnt_maintext', tr(s), 124, 330 + i * 18, { color: '#808080' }));
   }
 
   drawNaming(ctx) {
-    drawText(ctx, 'fnt_main', 'Name the fallen human.', 180, 60, { mono: 16 });
+    const title = tr('Name the fallen human.');
+    drawText(ctx, 'fnt_main', title, 180 - (title.length - 22) * 8, 60, { mono: 16 });
     drawText(ctx, 'fnt_main', this.draft, 280, 108, { mono: 16 });
     this.namingCells().forEach((c, i) => {
       const jx = c.ch ? Math.round(Math.random() * 2 - 1) : 0, jy = c.ch ? Math.round(Math.random() * 2 - 1) : 0;   // las letras tiemblan, como en el juego
       drawText(ctx, 'fnt_main', c.ch || c.label, c.x + jx, c.y + jy, { mono: 16, color: i === this.cur ? '#ff0' : '#fff' });
     });
-    drawText(ctx, 'fnt_maintext', 'Up to 6 letters.', 24, 456, { color: '#808080' });
+    drawText(ctx, 'fnt_maintext', tr('Up to 6 letters.'), 24, 456, { color: '#808080' });
   }
 }

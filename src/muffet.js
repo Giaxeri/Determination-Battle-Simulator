@@ -1,6 +1,7 @@
 import { drawSprite, drawText, playSound, playMusic, spriteBBox, SPR } from './assets.js';
 import { Battle, BORDER, Vapor, playerAt } from './battle.js';
 import { Writer } from './text.js';
+import { texts, tr } from './i18n.js';
 import { MuffetBody } from './muffetbody.js';
 
 // ============================================================================
@@ -40,7 +41,7 @@ export const MUFFET_ATTACKS = [
 ].map((name, type) => ({ name, type }));
 
 // Textos (textdata_en, obj_spiderb)
-const T = {
+const T = texts('muffet', {
   intro: '* Muffet traps you!/^',
   flavors: ['* Muffet pours you a cup of&  spiders.', '* All the spiders clap along to&  the music.', '* Muffet does a synchronized&  dance with the other spiders.', '* Muffet tidies up the web&  around you.', '* Smells like freshly baked&  cobwebs.'],
   check: '* MUFFET - ATK 38.8 DEF 18.8&* If she invites you to her&  parlor^1, excuse yourself./',
@@ -63,7 +64,17 @@ const T = {
              "You can come back&here any time...&And, for no charge&at all.../", "I'll wrap you&up and let you&play with my pet&again!/", "Ahuhuhuhuhuhu~&Just kidding~/", "I'll SPARE you&now~/%%"],
   sparing: '* Muffet is sparing you./^',
   won: (xp, g) => `* YOU WON!&* You earned ${xp} EXP and ${g} gold./`,
-};
+  talkDefault: ['What is it,&deary?/%%'],
+  struggleNothing: '* You struggle to escape the web^1.&* Nothing happened./',
+  struggle0: '* You struggle to escape the web^1.&* Muffet covers her mouth&  and giggles at you./',
+  struggle1: '* You struggle to escape the web^1.&* Muffet laughs and claps&  her hands./',
+  struggle2: ['* You struggle to escape the web./', '* Muffet is so amused by your&  antics that she gives you a&  discount!/'],
+  refuse: '* Muffet refuses your money./',
+  pay: p => `* You pay ${p}G^1.&* Muffet reduces her ATTACK&  for this turn!/`,
+  broke: ['* You empty your pockets..^1.&* But you don\'t have any&  money at all!/', '* Muffet takes pity on you&  and reduces her ATTACK for&  this turn./'],
+  outOfMoney: '* You\'re out of money^1.&* Muffet shakes her head./',
+  notEnough: '* You empty your pockets^1, but you&  don\'t have enough money.&* Muffet lowers the price./',
+});
 const TYPER33 = { font: 'fnt_plain', color: '#000', ox: 0, oy: 0, hspace: 9, vspace: 20, speed: 1, shake: 0, sound: 'txtmuffet' };
 const PURPLE = 'rgb(128,0,128)';
 const choose = (...a) => a[Math.floor(Math.random() * a.length)];
@@ -351,8 +362,8 @@ class SignSpider {                             // obj_signspider: "Up Next" con 
     if (this.con === 1 || this.con === 2) {
       drawSprite(ctx, 'spr_tinyspider_sign', this.signimg, this.x, this.y, { xs: 2, ys: 2 });
       if (this.signimg >= 4 && this.con === 1) {
-        const w = drawText(ctx, 'fnt_maintext', 'Up Next', -999, -999);     // scr_setfont(2) + scr_drawtext_centered(x, y-100)
-        drawText(ctx, 'fnt_maintext', 'Up Next', Math.round(this.x - w / 2), this.y - 100);
+        const up = tr('Up Next'), w = drawText(ctx, 'fnt_maintext', up, -999, -999);     // scr_setfont(2) + scr_drawtext_centered(x, y-100)
+        drawText(ctx, 'fnt_maintext', up, Math.round(this.x - w / 2), this.y - 100);
         const n = this.signno, x = this.x, y = this.y - 70, spr = (s, dx) => drawSprite(ctx, s, 0, x + dx, y);
         if ([0, 1, 6, 10].includes(n)) spr('spr_spiderbullet1', 0);
         if (n === 8) spr('spr_croissantl', 0);
@@ -500,10 +511,10 @@ export class MuffetBattle extends Battle {
       }
     }
     if (this.state === 'actList') {            // SCR_TEXT_6374
-      line('   * Check'); line('   * Struggle', 16 * 16); line(`   * Pay ${this.price}G`, 0, 32);
-      line(`Your Money: ${this.gold}G`, 16 * 9, 64, '#ff0');
+      line('   * ' + tr('Check')); line('   * ' + tr('Struggle'), 16 * 16); line(`   * ${tr('Pay')} ${this.price}G`, 0, 32);
+      line(`${tr('Your Money')}: ${this.gold}G`, 16 * 9, 64, '#ff0');
     }
-    if (this.state === 'mercyList') line('   * Spare', 0, 0, this.spareable ? '#ff0' : '#fff');
+    if (this.state === 'mercyList') line('   * ' + tr('Spare'), 0, 0, this.spareable ? '#ff0' : '#fff');
     if (this.state === 'itemList') super.drawSubmenu(ctx);
   }
   updateSub(inp) {
@@ -530,27 +541,27 @@ export class MuffetBattle extends Battle {
     if (pos === 0) msgs = [T.check];
     if (pos === 1) {                           // Struggle
       const s = this.struggle;
-      if (this.con > 50) msgs = ['* You struggle to escape the web^1.&* Nothing happened./'];
-      else if (s === 0) msgs = ['* You struggle to escape the web^1.&* Muffet covers her mouth&  and giggles at you./'];
-      else if (s === 1) msgs = ['* You struggle to escape the web^1.&* Muffet laughs and claps&  her hands./'];
+      if (this.con > 50) msgs = [T.struggleNothing];
+      else if (s === 0) msgs = [T.struggle0];
+      else if (s === 1) msgs = [T.struggle1];
       else if (s === 2) {
-        msgs = ['* You struggle to escape the web./', '* Muffet is so amused by your&  antics that she gives you a&  discount!/'];
+        msgs = T.struggle2;
         this.price = this.price <= this.gold ? Math.max(1, Math.ceil(this.price / 2)) : Math.max(1, this.gold);
-      } else msgs = ['* You struggle to escape the web^1.&* Nothing happened./'];
+      } else msgs = [T.struggleNothing];
       this.struggle++;
     }
     if (pos === 2) {                           // Pay
-      if (this.con >= 50) msgs = ['* Muffet refuses your money./'];
+      if (this.con >= 50) msgs = [T.refuse];
       else if (this.gold >= this.price) {
-        msgs = [`* You pay ${this.price}G^1.&* Muffet reduces her ATTACK&  for this turn!/`];
+        msgs = [T.pay(this.price)];
         this.gold -= this.price; this.bribes++;
         this.price += [0, 30, 40, 70, 50][this.bribes] ?? 300;
         this.atkdown = 2;
       } else if (this.gold === 0 && this.bribes === 0) {
-        msgs = ['* You empty your pockets..^1.&* But you don\'t have any&  money at all!/', '* Muffet takes pity on you&  and reduces her ATTACK for&  this turn./'];
+        msgs = T.broke;
         this.price = 10; this.bribes = 1; this.atkdown = 2;
-      } else if (this.gold === 0) msgs = ['* You\'re out of money^1.&* Muffet shakes her head./'];
-      else { msgs = ['* You empty your pockets^1, but you&  don\'t have enough money.&* Muffet lowers the price./']; this.price = Math.max(1, Math.ceil((this.price - 5) / 10)); }
+      } else if (this.gold === 0) msgs = [T.outOfMoney];
+      else { msgs = [T.notEnough]; this.price = Math.max(1, Math.ceil((this.price - 5) / 10)); }
     }
     this.boxMsgs(msgs, () => this.startEnemyTurn());
   }
@@ -567,7 +578,7 @@ export class MuffetBattle extends Battle {
     if (this.single) return null;
     if (this.talktime > 0) { const m = T.talkAfter[Math.min(this.talktime, 9) - 1]; this.talktime++; return [m]; }
     if (this.con === 0) return [T.blue];
-    return T.talk[this.turnamt] || ['What is it,&deary?/%%'];
+    return T.talk[this.turnamt] || T.talkDefault;
   }
 
   startEnemyTurn() {                           // mnfight = 1

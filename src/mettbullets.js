@@ -1,4 +1,6 @@
 import { drawSprite, drawText, playSound, SPR, FNT } from './assets.js';
+import { isES, tr } from './i18n.js';
+import { ES } from './lang/es.js';
 import { rnd, choose, gmMove, dirOf, setSpeedDir, setDir, ldx, ldy, pdir, rotBBox, R, hit, lineHits } from './gm.js';
 
 // ============================================================================
@@ -520,6 +522,24 @@ const ESSAY_BEAUT = ['beaut', 'hot', 'sexy', 'pretty', 'handsome', 'gorgeous', '
   'enchant', 'appeal', 'tantaliz', 'adorable', 'radiant', 'capitvat'];
 const ESSAY_MEAN = ['ugly', 'hideous', 'repulsive', 'unattractive', 'look bad', 'stupid', 'idiot', 'jerk', 'asshole', 'loser', 'dumbass', 'douche', 'creep'];
 const ESSAY_SWEAR = ['fuck', 'shit', 'cock', 'pussy', 'penis', 'vagina', 'anus', 'poop', 'tity', 'titty', 'bepis'];
+const ESSAY_EN = {
+  speechless: ["Speechless...?&Who can blame you?/%%"], concise: ["Well... that's concise./%%"],
+  fewest: ['Beautiful. Sometimes&the fewest words&speak the loudest./%%'], star: ['Nice. You get a&gold star./%%'],
+  great: ['Oh my... what a&great answer./%%'],
+  passion: ['Oooooh, you said so&much about me.../', 'I love how&passionate you are./', "... even though I&don't understand&what you said.../%%"],
+  book: ["Beautiful.&Why don't you&write a book?/%%"],
+  beaut1: ["Nice detail...&You're right, I do&look quite nice./%%"], beaut3: ['Wonderful! Amazing! A+...&I AM completely stunning./%%'],
+  beaut5: ["Oh, I'm blushing...&You're completely right,&I am beautiful in&every way./%%"],
+  beaut7: ["Oh my... I'm speechless...&You've completely&captured how&beautiful I am./%%"],
+  legs: ["That's right.&Legs was the&correct answer!/%%"], arms: ['How creative. Arms...&most people just&think about my legs./%%'],
+  hair: ['My hair... yes,&I use metal hair&gel./%%'],
+  personality: ["Yes^1, my personality&is quite charming^1,&isn't it?/%%"], voice: ['They say I have&the voice of a&Siren..^1./', '... awooga!/%%'],
+  dance: ["Dancing...^1?&Thank you^1, I'm&self-taught./%%"], mean: ['Huh? This essay is&supposed to be about&me, not about you.../%%'],
+  love: ["What a touching&confession! I'll add&it to the pile./%%"], toby: ['Toby? What the hell&is that?&Sounds... sexy./%%'],
+  swear: ['Oh my! This is a family&friendly TV show./', 'Now stand still while&I murder you./%%'],
+  W: { beaut: ESSAY_BEAUT, legs: ['leg'], arms: ['arm'], hair: ['hair'], personality: ['personality'], voice: ['voice'], dance: ['dancing', 'dance'],
+       mean: ESSAY_MEAN, love: ['i love you'], notLove: ['i love your'], toby: ['toby'], swear: ESSAY_SWEAR },
+};
 export class Essay {
   constructor(b) { this.b = b; this.str = ' '; this.alarm0 = 450; this.con = 0; this.cantype = 1; this.dotimer = 0; this.drawOn = 1; this.endbuffer = 180; b.typing = true; }
   update(inp) {
@@ -537,40 +557,41 @@ export class Essay {
   }
   judge() {                                        // lo que opina Mettaton y cuántos puntos da
     const s = this.str, l = s.toLowerCase(), has = w => l.includes(w), n = s.length;
-    let msg = ["Speechless...?&Who can blame you?/%%"];
-    if (n === 2) msg = ["Well... that's concise./%%"];
-    if (n > 2) msg = ['Beautiful. Sometimes&the fewest words&speak the loudest./%%'];
-    if (n > 13) msg = ['Nice. You get a&gold star./%%'];
-    if (n > 50) msg = ['Oh my... what a&great answer./%%'];
-    if (n > 90) msg = ['Oooooh, you said so&much about me.../', 'I love how&passionate you are./', "... even though I&don't understand&what you said.../%%"];
-    if (n > 140) msg = ["Beautiful.&Why don't you&write a book?/%%"];
+    const E = isES() ? ES.essay : ESSAY_EN, W = E.W, any = list => list.some(has);
+    let msg = E.speechless;
+    if (n === 2) msg = E.concise;
+    if (n > 2) msg = E.fewest;
+    if (n > 13) msg = E.star;
+    if (n > 50) msg = E.great;
+    if (n > 90) msg = E.passion;
+    if (n > 140) msg = E.book;
     let spec = 0, swear = 0, beaut = 0;
-    for (const w of ESSAY_BEAUT) if (has(w)) beaut += 2;
-    if (has('leg')) { beaut += 2; spec = 1; }
-    if (has('arm')) { beaut += 2; spec = 2; }
-    if (has('hair')) { beaut += 2; spec = 3; }
-    if (beaut > 1) msg = ["Nice detail...&You're right, I do&look quite nice./%%"];
-    if (beaut > 3) msg = ['Wonderful! Amazing! A+...&I AM completely stunning./%%'];
-    if (beaut > 5) msg = ["Oh, I'm blushing...&You're completely right,&I am beautiful in&every way./%%"];
-    if (beaut > 7) msg = ["Oh my... I'm speechless...&You've completely&captured how&beautiful I am./%%"];
-    if (spec === 1) msg = ["That's right.&Legs was the&correct answer!/%%"];
-    if (spec === 2) msg = ['How creative. Arms...&most people just&think about my legs./%%'];
-    if (spec === 3) msg = ['My hair... yes,&I use metal hair&gel./%%'];
-    if (has('personality')) spec = 3.1;
-    if (has('voice')) spec = 3.2;
-    if (has('dancing') || has('dance')) spec = 3.3;
-    if (spec === 3.1) msg = ["Yes^1, my personality&is quite charming^1,&isn't it?/%%"];
-    if (spec === 3.2) msg = ['They say I have&the voice of a&Siren..^1./', '... awooga!/%%'];
-    if (spec === 3.3) msg = ["Dancing...^1?&Thank you^1, I'm&self-taught./%%"];
-    for (const w of ESSAY_MEAN) if (has(w)) spec = 4;
-    if (spec === 4) msg = ['Huh? This essay is&supposed to be about&me, not about you.../%%'];
-    if (has('i love you')) spec = 5;
-    if (has('i love your')) spec = 0;
-    if (spec === 5) msg = ["What a touching&confession! I'll add&it to the pile./%%"];
-    if (has('toby')) spec = 6;
-    if (spec === 6) msg = ['Toby? What the hell&is that?&Sounds... sexy./%%'];
-    for (const w of ESSAY_SWEAR) if (has(w)) swear = 1;
-    if (swear) msg = ['Oh my! This is a family&friendly TV show./', 'Now stand still while&I murder you./%%'];
+    for (const w of W.beaut) if (has(w)) beaut += 2;
+    if (any(W.legs)) { beaut += 2; spec = 1; }
+    if (any(W.arms)) { beaut += 2; spec = 2; }
+    if (any(W.hair)) { beaut += 2; spec = 3; }
+    if (beaut > 1) msg = E.beaut1;
+    if (beaut > 3) msg = E.beaut3;
+    if (beaut > 5) msg = E.beaut5;
+    if (beaut > 7) msg = E.beaut7;
+    if (spec === 1) msg = E.legs;
+    if (spec === 2) msg = E.arms;
+    if (spec === 3) msg = E.hair;
+    if (any(W.personality)) spec = 3.1;
+    if (any(W.voice)) spec = 3.2;
+    if (any(W.dance)) spec = 3.3;
+    if (spec === 3.1) msg = E.personality;
+    if (spec === 3.2) msg = E.voice;
+    if (spec === 3.3) msg = E.dance;
+    if (any(W.mean)) spec = 4;
+    if (spec === 4) msg = E.mean;
+    if (any(W.love)) spec = 5;
+    if (any(W.notLove)) spec = 0;
+    if (spec === 5) msg = E.love;
+    if (any(W.toby)) spec = 6;
+    if (spec === 6) msg = E.toby;
+    if (any(W.swear)) swear = 1;
+    if (swear) msg = E.swear;
     let pts;
     if (swear) pts = -150; else if (spec === 6) pts = 300; else if (spec === 5) pts = 250; else if (spec === 4) pts = -200;
     else if (spec === 1) pts = 350; else if (spec === 2 || spec === 3) pts = 250; else if (spec > 3 && spec < 4) pts = 250;
@@ -581,10 +602,10 @@ export class Essay {
   draw(ctx) {
     const b = this.b, [L, , T] = b.ideal();
     wrapText(ctx, this.str, L + 25, T + 15, 25, 450);
-    if (this.cantype === 1) ['ESSAY PROMPT:', 'What do you', 'love most about', 'Mettaton?', '(No X or Z)'].forEach((s, i) => drawText(ctx, 'fnt_main', s, 430, 50 + i * 26));
-    else drawText(ctx, 'fnt_main', 'TIME UP!!!', 430, 200);
+    if (this.cantype === 1) ['ESSAY PROMPT:', 'What do you', 'love most about', 'Mettaton?', '(No X or Z)'].forEach((s, i) => drawText(ctx, 'fnt_main', tr(s), 430, 50 + i * 26));
+    else drawText(ctx, 'fnt_main', tr('TIME UP!!!'), 430, 200);
     if (++this.dotimer > 4) { this.drawOn = this.drawOn ? 0 : 1; this.dotimer = 0; }
-    if (this.drawOn && this.str.length < 3 && this.cantype === 1) drawText(ctx, 'fnt_main', '[START TYPING]', b.heart.x - 30, b.heart.y + 20);
+    if (this.drawOn && this.str.length < 3 && this.cantype === 1) drawText(ctx, 'fnt_main', tr('[START TYPING]'), b.heart.x - 30, b.heart.y + 20);
   }
 }
 function wrapText(ctx, s, x, y, sep, w) {         // draw_text_ext

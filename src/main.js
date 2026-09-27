@@ -6,6 +6,7 @@ import { MettatonBattle } from './mettaton.js';
 import { MuffetBattle } from './muffet.js';
 import { Battle } from './battle.js';
 import { buildUI, layout, updateUI, refreshVolume } from './ui.js';
+import { buildSpanishSprites } from './lang/sprites_es.js';
 
 const cv = document.getElementById('game');
 const ctx = cv.getContext('2d');
@@ -70,4 +71,4 @@ function loop(now) {
   requestAnimationFrame(loop);
 }
 
-loadAssets().then(() => { buildUI(); scene.draw(ctx); requestAnimationFrame(t => { last = t; loop(t); }); });
+loadAssets().then(() => { buildSpanishSprites(); buildUI(); scene.draw(ctx); requestAnimationFrame(t => { last = t; loop(t); }); });

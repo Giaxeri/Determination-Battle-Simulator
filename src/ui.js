@@ -1,5 +1,6 @@
 import { FNT, SPR, drawText, setVolume, isMuted, VOLUME } from './assets.js';
 import { SETTINGS, saveSettings, resolution } from './settings.js';
+import { isES, tr } from './i18n.js';
 
 // ============================================================================
 //  Todo lo que va FUERA del área de combate (640x480): título, aviso de fan-game,
@@ -10,7 +11,7 @@ const GUTTER = 130, TOP = 46, BOTTOM = 102;          // márgenes alrededor del 
 
 // Texto con fuente bitmap del juego en su propio <canvas> (nítido al escalar)
 function textCanvas(lines, font, { color = '#fff', lh = 15, extra } = {}) {
-  const f = FNT[font], widths = lines.map(l => [...l].reduce((w, c) => w + ((f.glyphs[c] || f.glyphs['?'])[4]), 0));
+  const f = FNT[font], widths = lines.map(l => drawText(document.createElement('canvas').getContext('2d'), font, l, 0, 0));
   const c = document.createElement('canvas');
   c.width = Math.max(1, ...widths) + 2; c.height = lh * lines.length;
   const g = c.getContext('2d');
@@ -25,38 +26,14 @@ function place(e, x, y, w, h) { Object.assign(e.style, { left: x + 'px', top: y 
 let parts = null, K = 1, drag = false;
 
 export function buildUI() {
-  const title = textCanvas(['DETERMINATION BATTLE SIMULATOR'], 'fnt_main', { lh: 30 });
   const tribute = el('a', 'ui'); tribute.href = 'https://undertale.com'; tribute.target = '_blank'; tribute.rel = 'noopener';
-  tribute.title = 'Buy UNDERTALE at undertale.com';
-  const grey = '#909090';
-  const tribCanvas = textCanvas([
-    'This is a non-profit, fan-made tribute to UNDERTALE.',
-    'UNDERTALE    is owned by Toby Fox.',
-    'Please support the official release:',
-    '     Buy UNDERTALE at undertale.com',
-  ], 'fnt_maintext', { color: i => i === 3 ? '#fff' : grey, extra: g => {
-    const f = FNT.fnt_maintext, w = [...'UNDERTALE'].reduce((s, c) => s + f.glyphs[c][4], 0);
-    registered(g, w + 2, 16, grey);                              // ® dibujado a mano (la fuente no lo trae)
-    const w2 = [...'     Buy UNDERTALE at '].reduce((s, c) => s + f.glyphs[c][4], 0);
-    drawText(g, 'fnt_maintext', 'undertale.com', w2, 45, { color: '#ff0' });
-    const heart = SPR.spr_heart.frames[0]; g.drawImage(heart, 0, 46, 12, 12);
-  } });
-  tribute.appendChild(tribCanvas);
-
   const credits = el('a', 'ui credits'); credits.href = 'https://github.com/Giaxeri'; credits.target = '_blank'; credits.rel = 'noopener';
   credits.title = 'Gianfry (Giaxeri) on GitHub';
   const frame = el('div', 'avatar', credits);
   const img = el('img', '', frame); img.src = 'https://avatars.githubusercontent.com/u/149126315?s=100&v=4'; img.alt = 'Giaxeri';
-  const credText = textCanvas(['Made by:', 'Gianfry (Giaxeri)', 'on Github!', 'github.com/Giaxeri'], 'fnt_maintext',
-    { color: i => i === 1 ? '#fff' : i === 3 ? '#ff0' : grey });
-  credits.appendChild(credText);
-
-  const esc = textCanvas(['Press ESC to return to the menu'], 'fnt_maintext', { color: '#808080' });
-  document.body.appendChild(esc); esc.classList.add('ui');
 
   // Barra de volumen vertical (arrastrable) con el alma como tirador y el número debajo
   const vol = el('div', 'ui vol');
-  const volLabel = textCanvas(['VOLUME'], 'fnt_maintext'); vol.appendChild(volLabel);
   const track = el('div', 'track', vol), fill = el('div', 'fill', track);
   const knob = el('img', 'knob', track); knob.src = SPR.spr_heart.frames[0].src; knob.draggable = false;
   const num = el('canvas', 'px num', vol);
@@ -68,11 +45,39 @@ export function buildUI() {
   track.addEventListener('pointermove', e => { if (drag) setFromY(e.clientY); });
   track.addEventListener('pointerup', () => { drag = false; });
   track.addEventListener('pointercancel', () => { drag = false; });
-  parts = { title, tribute, tribCanvas, credits, frame, credText, esc, vol, volLabel, track, fill, knob, num };
-  document.body.appendChild(title); title.classList.add('ui');
+  parts = { tribute, credits, frame, vol, track, fill, knob, num };
   setVolume(SETTINGS.volume);
-  refreshVolume();
+  refreshTexts();
   addEventListener('resize', layout);
+}
+
+// Textos de alrededor del combate en el idioma elegido (se rehacen al cambiar de idioma)
+export function refreshTexts() {
+  if (!parts) return;
+  const p = parts, grey = '#909090';
+  document.documentElement.lang = isES() ? 'es' : 'en';
+  for (const k of ['title', 'tribCanvas', 'credText', 'esc', 'volLabel']) if (p[k]) p[k].remove();
+  p.title = textCanvas(['DETERMINATION BATTLE SIMULATOR'], 'fnt_main', { lh: 30 });
+  document.body.appendChild(p.title); p.title.classList.add('ui');
+  const L = isES() ? [tr('tribute1'), tr('tribute2'), tr('tribute3'), tr('tribute4a') + tr('tribute4b')]
+                   : ['This is a non-profit, fan-made tribute to UNDERTALE.', 'UNDERTALE    is owned by Toby Fox.', 'Please support the official release:', '     Buy UNDERTALE at undertale.com'];
+  const link = isES() ? tr('tribute4a') : '     Buy UNDERTALE at ';
+  p.tribute.title = tr('Buy UNDERTALE at undertale.com');
+  p.tribCanvas = textCanvas(L, 'fnt_maintext', { color: i => i === 3 ? '#fff' : grey, extra: g => {
+    const f = FNT.fnt_maintext, w = [...'UNDERTALE'].reduce((s, c) => s + f.glyphs[c][4], 0);
+    registered(g, w + 2, 16, grey);                              // ® dibujado a mano (la fuente no lo trae)
+    const w2 = [...link].reduce((s, c) => s + (f.glyphs[c] || f.glyphs['?'])[4], 0);
+    drawText(g, 'fnt_maintext', 'undertale.com', w2, 45, { color: '#ff0' });
+    const heart = SPR.spr_heart.frames[0]; g.drawImage(heart, 0, 46, 12, 12);
+  } });
+  p.tribute.appendChild(p.tribCanvas);
+  p.credText = textCanvas([tr('Made by:'), 'Gianfry (Giaxeri)', tr('on Github!'), 'github.com/Giaxeri'], 'fnt_maintext',
+    { color: i => i === 1 ? '#fff' : i === 3 ? '#ff0' : grey });
+  p.credits.appendChild(p.credText);
+  p.esc = textCanvas([tr('Press ESC to return to the menu')], 'fnt_maintext', { color: '#808080' });
+  document.body.appendChild(p.esc); p.esc.classList.add('ui');
+  p.volLabel = textCanvas([tr('VOLUME')], 'fnt_maintext');
+  p.vol.insertBefore(p.volLabel, p.track);
   layout();
 }
 
@@ -87,7 +92,7 @@ export function refreshVolume() {
   const v = Math.round(VOLUME.master * 100), muted = isMuted();
   parts.fill.style.height = v + '%';
   parts.knob.style.bottom = `calc(${v}% - ${8 * K * 1.5}px)`;
-  const c = parts.num, s = muted ? 'MUTE' : String(v), f = FNT.fnt_main;
+  const c = parts.num, s = muted ? tr('MUTE') : String(v), f = FNT.fnt_main;
   c.width = [...s].reduce((w, ch) => w + f.glyphs[ch][4], 0) + 2; c.height = 30;
   const g = c.getContext('2d'); g.clearRect(0, 0, c.width, c.height);
   drawText(g, 'fnt_main', s, 0, 0, { color: muted ? '#f00' : '#ff0' });

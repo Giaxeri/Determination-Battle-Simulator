@@ -1,12 +1,12 @@
 import { drawSprite, drawText, playSound, playMusic, stopMusic, SPR } from './assets.js';
-import { SETTINGS } from './settings.js';
+import { texts, tr, trn, sprL, itemL, playerName } from './i18n.js';
 import { UndyneBody } from './undyne.js';
 import { Writer, TYPER_UNDYNE } from './text.js';
 import { GreenAttack } from './green.js';
 import { SpearSummon, RisingSpears, SpearCircle, SpinAmbush } from './red.js';
 
 // Textos tal cual los guarda el juego (textdata_en)
-const TXT = {
+const TXT = texts('undyne', {
   intro: '* The heroine appears./^',                                               // scr_battlegroup_1410
   check: '* UNDYNE THE UNDYING 99ATK 99DEF&* Heroine reformed by her own&  DETERMINATION to save Earth./', // obj_undyne_ex_808
   flavor: '* The wind is howling.../^',                                            // obj_undyne_ex_781 (resto de turnos)
@@ -18,7 +18,7 @@ const TXT = {
            "\\E5By now she's called&ASGORE and told him&to absorb the 6&human SOULs./%%"],
   death2: ['And with that&power.../%%'],
   death3: ['This world will&live on...!/%%'],
-};
+});
 
 // Objetos (item_name / item_name_short / item_use de textdata_en; curación de scr_itemuseb).
 // Cada jefe lleva los objetos más usados en esa parte del juego: 4 del que menos cura (página 1) y 2 del que más (página 2).
@@ -34,7 +34,7 @@ export const ITEMS = {
 };
 // Estadísticas del jugador (LV: maxhp = 16+lv*4, at = 8+lv*2, df = 9+ceil(lv/4)) con su arma y armadura
 export function playerAt(lv, weapon, armor, extra = {}) {
-  return { name: SETTINGS.name || 'Player', lv, hp: 16 + lv * 4, maxHp: 16 + lv * 4, at: 8 + lv * 2, df: 9 + Math.ceil(lv / 4), weapon, armor, ...extra };
+  return { name: playerName(), lv, hp: 16 + lv * 4, maxHp: 16 + lv * 4, at: 8 + lv * 2, df: 9 + Math.ceil(lv / 4), weapon, armor, ...extra };
 }
 
 // Cajas de batalla (SCR_BORDERSETUP): [izq, der, arriba, abajo]
@@ -328,21 +328,21 @@ export class Battle {
   }
 
   useItem(i) {                                   // scr_itemuseb + scr_recoitem
-    const key = this.inventory[i], it = ITEMS[key], p = this.player;
+    const key = this.inventory[i], it = itemL(key, ITEMS[key]), p = this.player;
     this.inventory.splice(i, 1);                 // los demás objetos suben un puesto (scr_itemshift)
     let msg = it.use;
-    if (it.candy) { const r = Math.round(Math.random() * 15); if (r <= 2) msg += ' &* Very un-licorice-like.'; if (r === 15) msg += ' &* ... tastes like licorice.'; }
-    if (it.donut && Math.ceil(Math.random() * 10) > 9) msg = "* Don't worry^1, Spider didn't.";
+    if (it.candy) { const r = Math.round(Math.random() * 15); if (r <= 2) msg += tr(' &* Very un-licorice-like.'); if (r === 15) msg += tr(' &* ... tastes like licorice.'); }
+    if (it.donut && Math.ceil(Math.random() * 10) > 9) msg = tr("* Don't worry^1, Spider didn't.");
     msg = this.itemText(key, msg);
     playSound('swallow');
     if (it.speed) {
-      if (this.sp < 8) { this.sp++; msg += '&* Your SPEED boosts!'; }
+      if (this.sp < 8) { this.sp++; msg += tr('&* Your SPEED boosts!'); }
       this.later(10, () => playSound('speedup'));
     } else this.later(10, () => playSound(it.sound2 || 'power'));
-    if (it.atk && p.at < 150) { p.at += it.atk; msg += '&* ATTACK increased by 4!'; }
+    if (it.atk && p.at < 150) { p.at += it.atk; msg += tr('&* ATTACK increased by 4!'); }
     const heal = it.heal + (p.weapon.healBonus || 0);          // la Burnt Pan cura 4 más
     p.hp = Math.min(p.maxHp, p.hp + heal);
-    msg += p.hp >= p.maxHp ? '&* Your HP was maxed out./' : `&* You recovered ${heal} HP!/`;
+    msg += p.hp >= p.maxHp ? tr('&* Your HP was maxed out./') : trn('recovered', heal, `&* You recovered ${heal} HP!/`);
     this.writer = new Writer(msg, BORDER[0][0], BORDER[0][2]);
     this.go('actText');
   }
@@ -506,20 +506,20 @@ export class Battle {
         ctx.fillStyle = '#0f0'; ctx.fillRect(bx, y + 5, hp, 17);
       }
     }
-    if (this.state === 'actList') line('   * Check');
-    if (this.state === 'mercyList') line('   * Spare');
+    if (this.state === 'actList') line('   * ' + tr('Check'));
+    if (this.state === 'mercyList') line('   * ' + tr('Spare'));
     if (this.state === 'itemList') {             // 2 columnas x 2 filas por página y "PAGE N"
       this.inventory.slice(this.itemPage * 4, this.itemPage * 4 + 4).forEach((k, i) =>
-        drawText(ctx, 'fnt_main', '   * ' + ITEMS[k].short, x + (i % 2) * 240, y + Math.floor(i / 2) * 32, { mono: 16 }));
-      drawText(ctx, 'fnt_main', '   PAGE ' + (this.itemPage + 1), x + 240, y + 64, { mono: 16 });
+        drawText(ctx, 'fnt_main', '   * ' + itemL(k, ITEMS[k]).short, x + (i % 2) * 240, y + Math.floor(i / 2) * 32, { mono: 16 }));
+      drawText(ctx, 'fnt_main', '   ' + tr('PAGE') + ' ' + (this.itemPage + 1), x + 240, y + 64, { mono: 16 });
     }
   }
 
   drawStats(ctx) {
     const p = this.player;
     const w = drawText(ctx, 'fnt_curs', p.name, 30, 400);
-    drawText(ctx, 'fnt_curs', `LV ${p.lv}`, 30 + w + 32, 400);
-    drawSprite(ctx, 'spr_hpname', 0, 244, 405);
+    drawText(ctx, 'fnt_curs', `${tr('LV')} ${p.lv}`, 30 + w + 32, 400);
+    drawSprite(ctx, sprL('spr_hpname'), 0, 244, 405);
     const bx = 275, barW = Math.round(p.maxHp * 1.2);
     ctx.fillStyle = '#f00'; ctx.fillRect(bx, 400, barW, 21);
     ctx.fillStyle = '#ff0'; ctx.fillRect(bx, 400, Math.round(p.hp * 1.2), 21);
@@ -528,7 +528,7 @@ export class Battle {
 
   drawButtons(ctx) {
     const active = this.state === 'menu' || this.state === 'intro' || this.state === 'itemList' || this.state === 'fightTarget' || this.state === 'actTarget' || this.state === 'actList' || this.state === 'mercyList';
-    BUTTONS.forEach(([spr, x], i) => drawSprite(ctx, spr, active && i === this.menu ? 1 : 0, x, 432));
+    BUTTONS.forEach(([spr, x], i) => drawSprite(ctx, sprL(spr), active && i === this.menu ? 1 : 0, x, 432));
   }
 
   drawHeart(ctx) {
@@ -634,7 +634,7 @@ class DmgWriter {
         drawSprite(ctx, 'spr_dmgnum_o', d, cx - i * 32 + place * 16, this.y - 28, { color: '#f00' });
       }
     } else {
-      drawSprite(ctx, 'spr_dmgmiss_o', 0, x - 10, this.y - 16, { color: '#c0c0c0' });
+      drawSprite(ctx, sprL('spr_dmgmiss_o'), 0, x - 10, this.y - 16, { color: '#c0c0c0' });
     }
   }
 }

@@ -1,6 +1,7 @@
 import { drawSprite, drawText, playSound, playMusic, stopMusic, spriteBBox, SPR } from './assets.js';
 import { Battle, BORDER, playerAt } from './battle.js';
 import { Writer } from './text.js';
+import { texts, tr, sprL } from './i18n.js';
 
 // ============================================================================
 //  Napstablook (obj_napstablook). Música: "Ghost Fight" (mus_ghostbattle.ogg).
@@ -17,7 +18,7 @@ export const NAPSTA_ATTACKS = [
 ];
 
 // Textos (textdata_en, obj_napstablook / obj_crygen3)
-const T = {
+const T = texts('napsta', {
   intro: '* Here comes Napstablook.',
   check: "* NAPSTABLOOK - ATK 10 DEF 10&* This monster doesn't seem to&  have a sense of humor.../^",
   threat: '* You give Napstablook a&  cruel look./^',
@@ -32,7 +33,9 @@ const T = {
   kill: ['umm... you do&know you cant&kill ghosts, right?/', "we're sorta&incorporeal and&all/", 'i was just&lowering my hp&because i didnt&want to be rude/',
          'sorry..^1.&i just made this&more awkward.../', 'pretend you beat&  me.../', 'ooooooooo^1o%%'],
   won: '* YOU WON!&* You lost 1 experience point./%',
-};
+  lines: { check: "oh, i'm&REAL&funny.", threat: 'go&ahead,&do it.', flirt: "i'd just&weigh&you&down.", heh: 'heh...', heheh: 'heh&heh...',
+           letme: 'let me&try...', knew: 'i knew&it...', ohno: 'oh&no...', gee: 'oh&gee...' },
+});
 // global.typer = 2: fnt_plain negro, 9x20, una letra cada 2 frames, SND_TXT1
 const TYPER2 = { font: 'fnt_plain', color: '#000', ox: 0, oy: 0, hspace: 9, vspace: 20, speed: 2, shake: 0, sound: 'txtmuffet' };
 const NX = 266, NY = 106, NW = 116;                // posición (scr_battlegroup) y ancho del sprite a escala 2
@@ -190,7 +193,7 @@ class NapstaAttack {
     if (this.a3 && --this.a3 === 0) { b.nbubble = null; if (!b.single) b.mercymod = -50; b.flavor = T.awaits; }
   }
   draw(ctx) {
-    if (this.kind === 'sad') drawSprite(ctx, 'spr_bulletNapstaSad', 0, this.x, this.y);
+    if (this.kind === 'sad') drawSprite(ctx, sprL('spr_bulletNapstaSad'), 0, this.x, this.y);
     for (const s of this.bullets) s.draw(ctx);
     for (const f of this.fx) f.draw(ctx);
   }
@@ -247,8 +250,8 @@ export class NapstablookBattle extends Battle {
         ctx.fillStyle = '#f00'; ctx.fillRect(bx, y + 5, w, 17); ctx.fillStyle = '#0f0'; ctx.fillRect(bx, y + 5, hp, 17);
       }
     }
-    if (this.state === 'actList') { line('   * Check'); line('   * Flirt', 256); line('   * Threat', 0, 32); line('   * Cheer', 256, 32); }   // SCR_TEXT_6041
-    if (this.state === 'mercyList') line('   * Spare');
+    if (this.state === 'actList') { line('   * ' + tr('Check')); line('   * ' + tr('Flirt'), 256); line('   * ' + tr('Threat'), 0, 32); line('   * ' + tr('Cheer'), 256, 32); }   // SCR_TEXT_6041
+    if (this.state === 'mercyList') line('   * ' + tr('Spare'));
     if (this.state === 'itemList') super.drawSubmenu(ctx);
   }
   updateSub(inp) {
@@ -287,17 +290,18 @@ export class NapstablookBattle extends Battle {
   talkLine() {                                     // Alarm_6: qué dice en el globo
     const m = this.mycommand, w = this.whatiheard, mm = this.mercymod;
     let s = m < 40 ? T.random[0] : m < 66 ? T.random[1] : T.random[2];
-    if (w === 0) s = "oh, i'm&REAL&funny.";
-    if (w === 1) s = 'go&ahead,&do it.';
-    if (w === 3) s = "i'd just&weigh&you&down.";
-    if (w === 4) s = 'heh...';
-    if (w === 4 && mm > -300) s = 'heh&heh...';
-    if (w === 4 && mm > -200) s = 'let me&try...';
+    const L = T.lines;
+    if (w === 0) s = L.check;
+    if (w === 1) s = L.threat;
+    if (w === 3) s = L.flirt;
+    if (w === 4) s = L.heh;
+    if (w === 4 && mm > -300) s = L.heheh;
+    if (w === 4 && mm > -200) s = L.letme;
     if (w !== 4 && w !== 3 && mm === -50 && this.mercer === 0) {   // no le gustó tu respuesta
-      s = 'i knew&it...'; this.mercymod = -1200; this.hat = null;
+      s = L.knew; this.mercymod = -1200; this.hat = null;
     }
-    if (w === 3 && mm === -49) s = 'oh&no...';
-    if (w === 4 && mm === -49) s = 'oh&gee...';
+    if (w === 3 && mm === -49) s = L.ohno;
+    if (w === 4 && mm === -49) s = L.gee;
     return s;
   }
 

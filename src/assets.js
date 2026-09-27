@@ -90,10 +90,95 @@ export async function loadAssets() {
     const [data, image] = await Promise.all([fetch(`assets/fonts/${name}.json`).then(r => r.json()), img(`assets/fonts/${name}.png`)]);
     FNT[name] = { img: image, ...data };
   }
+  for (const name of ['fnt_main', 'fnt_maintext', 'fnt_plain']) addAccents(name);
   await Promise.all(Object.entries(SOUND_FILES).map(async ([k, url]) => {
     try { rawAudio[k] = await (await fetch(url)).arrayBuffer(); } catch (e) { console.warn('no se pudo cargar', url); }
   }));
 }
+
+// ---------- Letras del español (á é í ó ú ñ ü ¿ ¡) ----------
+// Las fuentes del juego no las traen: se construyen a partir de la letra base y una tilde dibujada
+// con los mismos "píxeles" de la fuente (fnt_main es fnt_maintext al doble de tamaño).
+const MARKS = {
+  acute: ['...##', '..##.'],
+  tilde: ['.###.#', '#.###.'],
+  dier: ['##.##', '##.##'],
+};
+const ACCENTS = {
+  'á': ['a', 'acute'], 'é': ['e', 'acute'], 'í': ['i', 'acute'], 'ó': ['o', 'acute'], 'ú': ['u', 'acute'],
+  'Á': ['A', 'acute'], 'É': ['E', 'acute'], 'Í': ['I', 'acute'], 'Ó': ['O', 'acute'], 'Ú': ['U', 'acute'],
+  'ñ': ['n', 'tilde'], 'Ñ': ['N', 'tilde'], 'ü': ['u', 'dier'], 'Ü': ['U', 'dier'],
+  '¿': ['?', 'flip'], '¡': ['!', 'flip'],
+};
+function addAccents(name) {
+  const f = FNT[name], G = f.glyphs, u = name === 'fnt_main' ? 2 : 1;
+  const todo = Object.keys(ACCENTS).filter(c => !G[c] && G[ACCENTS[c][0]]);
+  if (!todo.length) return;
+  const cellW = Math.max(...todo.map(c => G[ACCENTS[c][0]][2])), cellH = Math.max(...todo.map(c => G[ACCENTS[c][0]][3]));
+  const c = document.createElement('canvas');
+  c.width = Math.max(f.img.width, todo.length * (cellW + 8)); c.height = f.img.height + cellH + 2;
+  const g = c.getContext('2d');
+  g.drawImage(f.img, 0, 0);
+  const inkTop = ch => {                               // primera fila con tinta de una letra
+    const [x, y, w, h] = G[ch], d = g.getImageData(x, y, w, h).data;
+    for (let r = 0; r < h; r++) for (let q = 0; q < w; q++) if (d[(r * w + q) * 4 + 3] > 0) return r;
+    return 0;
+  };
+  const xTop = inkTop('n');                             // altura de las minúsculas
+  todo.forEach((ch, k) => {
+    const [base, mark] = ACCENTS[ch], [gx, gy, gw0, gh, shift, off0] = G[base];
+    let gw = gw0, off = off0;
+    const nx = k * (cellW + 8), ny = f.img.height + 2;
+    const src = g.getImageData(gx, gy, gw, gh), px = src.data;
+    const A = (q, r) => px[(r * gw + q) * 4 + 3] > 0;
+    let rows = [...Array(gh)].map((_, r) => [...Array(gw)].map((_, q) => A(q, r)));
+    if (mark === 'flip') rows = flipInk(rows);
+    else {
+      const lower = base === base.toLowerCase();
+      if (base === 'i') rows = rows.map((row, r) => r < xTop ? row.map(() => false) : row);   // í sin el punto
+      let top = lower ? xTop : rows.findIndex(row => row.some(Boolean));
+      const pat = MARKS[mark], mh = pat.length * u;
+      while (top < mh + u) {                            // no cabe la tilde: se quita una fila repetida de la letra
+        let cut = -1;
+        for (let r = top; r < gh - 1; r++) if (rows[r].every((v, q) => v === rows[r + 1][q])) { cut = r; break; }
+        if (cut < 0) break;
+        rows.splice(cut, 1); rows.unshift(rows[0].map(() => false)); top++;
+      }
+      const bottom = Math.max(mh, top - u);              // fila de abajo de la tilde (con un hueco)
+      const cols = rows.map(row => row.map((v, q) => v ? q : -1)).flat().filter(q => q >= 0);
+      const mid = cols.length ? (Math.min(...cols) + Math.max(...cols) + 1) / 2 : gw / 2;
+      const pw = pat[0].length * u;
+      let x0 = Math.round((mid - pw / 2) / u) * u;
+      const padL = Math.max(0, -x0), padR = Math.max(0, x0 + pw - gw);   // letras estrechas (i): se ensancha la celda
+      if (padL || padR) {
+        rows = rows.map(row => [...Array(padL).fill(false), ...row, ...Array(padR).fill(false)]);
+        gw += padL + padR; off -= padL; x0 += padL;
+      }
+      pat.forEach((line, i) => [...line].forEach((v, j) => {
+        if (v !== '#') return;
+        for (let a = 0; a < u; a++) for (let b = 0; b < u; b++) {
+          const rr = bottom - mh + i * u + a, qq = x0 + j * u + b;
+          if (rr >= 0 && rr < gh && qq >= 0 && qq < gw) rows[rr][qq] = true;
+        }
+      }));
+    }
+    const out = g.createImageData(gw, gh);
+    rows.forEach((row, r) => row.forEach((v, q) => { if (v) out.data.set([255, 255, 255, 255], (r * gw + q) * 4); }));
+    g.putImageData(out, nx, ny);
+    G[ch] = [nx, ny, gw, gh, shift, off];
+  });
+  c.src = f.img.src + '#es';                            // clave para la caché de colores
+  f.img = c;
+}
+function flipInk(rows) {                                // ¿ y ¡: la letra girada 180° dentro de su caja de tinta
+  const h = rows.length, w = rows[0].length;
+  let t = h, b = -1, l = w, r = -1;
+  rows.forEach((row, y) => row.forEach((v, x) => { if (v) { t = Math.min(t, y); b = Math.max(b, y); l = Math.min(l, x); r = Math.max(r, x); } }));
+  return rows.map((row, y) => row.map((_, x) => y >= t && y <= b && x >= l && x <= r ? rows[t + b - y][l + r - x] : false));
+}
+// Sin la letra en la fuente: se usa la letra sin tilde (á -> a, ¿ -> ?)
+const PLAIN = { '¿': '?', '¡': '!' };
+function plainChar(ch) { return PLAIN[ch] || ch.normalize('NFD').replace(/[̀-ͯ]/g, ''); }
 
 // ---------- Dibujo estilo GameMaker ----------
 const tintCache = new Map();
@@ -137,7 +222,7 @@ export function drawText(ctx, font, text, x, y, { color = '#fff', mono = 0 } = {
   const f = FNT[font]; let cx = x;
   const src = color === '#fff' ? f.img : tinted(f.img, color);
   for (const ch of String(text)) {
-    const g = f.glyphs[ch] || f.glyphs['?'];
+    const g = f.glyphs[ch] || f.glyphs[plainChar(ch)] || f.glyphs['?'];
     if (g) {
       const [gx, gy, gw, gh, shift, off] = g;
       if (gw && gh) ctx.drawImage(src, gx, gy, gw, gh, Math.round(cx + off), Math.round(y), gw, gh);
