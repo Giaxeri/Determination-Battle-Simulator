@@ -126,4 +126,9 @@ export function layout() {
 }
 
 // Qué se ve en cada momento (el "ESC" solo en combate)
-export function updateUI() { if (parts) parts.esc.style.display = window.battle ? 'block' : 'none'; }
+export function updateUI() {
+  if (!parts) return;
+  const inBattle = !!window.battle;              // en combate: solo "ESC" y el volumen; en el menú: título, aviso y créditos
+  parts.esc.style.display = inBattle ? 'block' : 'none';
+  for (const e of [parts.title, parts.tribute, parts.credits]) e.style.display = inBattle ? 'none' : 'block';
+}
