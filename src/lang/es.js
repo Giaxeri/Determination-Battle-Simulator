@@ -17,6 +17,7 @@ ES.ui = {
   'Left / Right on Language: English / Español.': 'Izquierda / Derecha en Idioma: English / Español.',
   'Z on Name: choose the name used in battle.': 'Z en Nombre: elige el nombre que usas en combate.',
   'X: go back.': 'X: volver.',
+  'Press Z to proceed · Press X to go back': 'Presiona Z para avanzar · Presiona X para regresar',
   'Name the fallen human.': 'Nombra al humano caído.', 'Quit': 'Salir', 'Backspace': 'Borrar', 'Done': 'Listo',
   'Up to 6 letters.': 'Hasta 6 letras.',
   'Press ESC to return to the menu': 'Pulsa ESC para volver al menú',

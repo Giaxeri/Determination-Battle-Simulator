@@ -222,6 +222,7 @@ export function drawText(ctx, font, text, x, y, { color = '#fff', mono = 0 } = {
   const f = FNT[font]; let cx = x;
   const src = color === '#fff' ? f.img : tinted(f.img, color);
   for (const ch of String(text)) {
+    if (ch === '·') { ctx.fillStyle = color; ctx.fillRect(Math.round(cx), Math.round(y + 7), 2, 2); cx += mono || 4; continue; }
     const g = f.glyphs[ch] || f.glyphs[plainChar(ch)] || f.glyphs['?'];
     if (g) {
       const [gx, gy, gw, gh, shift, off] = g;
