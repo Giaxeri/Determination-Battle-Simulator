@@ -134,7 +134,7 @@ export class BossMenu {
     drawSprite(ctx, 'spr_papyrusboss_head', 0, 452, 200 + Math.sin(t / 17 + 1) * 3);
     drawSprite(ctx, 'spr_napstablook_d', 0, 560, 230 + Math.sin(t / 25) * 6, { xs: 2, ys: 2, alpha: 0.7 + Math.sin(t / 25) * 0.2 });
     drawSprite(ctx, 'spr_floweynice', Math.floor(t / 15) % 2, 30, 360, { xs: 2, ys: 2 });
-    drawText(ctx, 'fnt_maintext', tr('Press Z to proceed · Press X to go back'), 100, 390, { color: '#808080' });
+    drawText(ctx, 'fnt_maintext', tr('Press Z to proceed · Press X to go back'), 150, 390, { color: '#808080' });
     this.dogX += 1.2; if (this.dogX > 700) this.dogX = -140;                              // el perro molesto pasa arrastrándose
     drawSprite(ctx, 'spr_tobydogscoot', Math.floor(t / 8) % 2, this.dogX, 408, { xs: 1.5, ys: 1.5 });
     drawSprite(ctx, 'spr_sleepdog', Math.floor(t / 30) % 2, 560, 440, { xs: 2, ys: 2 });
