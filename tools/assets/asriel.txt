@@ -1,0 +1,39 @@
+# Asriel Dreemurr (src/asriel.js): sprites (expresiones regulares) y sonidos incrustados
+^spr_asriel(feet|torso|locket|shoulder_r|collar|head)$
+^spr_asrielarm_r(_shrug)?$
+^spr_torsoball$
+^spr_asriel_headshake_sassy$
+^spr_asriel_afterimager$
+^spr_firebullet$
+^spr_regstar$
+^spr_stormstar$
+^spr_handlightning$
+^spr_rainbow(target|bolt)$
+^spr_asriel_gun(bolt|arm_shot|arm_unhinge|arm_meter)$
+^spr_asriel_sword(|lessarm|arm|arm_half|arm_power|extend|extend_shatter|smear|twinkle)$
+^spr_hg_(debris_small|horns|jaws|leftovers|mainface|laughing)$
+^spr_infinitysign$
+^spr_savebt$
+^spr_afinal_(orbwing|orb|stem|cosmoswing|face|face_cry|face_cry2|arm|shoulder)$
+^spr_beamcircle$
+^spr_redtarget$
+^spr_ultimabullet$
+^spr_asrielpanels$
+sound: snd_txtasr2
+sound: snd_heal_c
+sound: mus_sfx_spellcast
+sound: mus_sfx_star
+sound: mus_create
+sound: mus_sfx_a_lithit
+sound: mus_sfx_a_lithit2
+sound: mus_sfx_a_bullet
+sound: mus_sfx_a_target
+sound: mus_sfx_rainbowbeam_1
+sound: mus_sfx_segapower
+sound: mus_sfx_segapower2
+sound: mus_sfx_a_pullback
+sound: mus_sfx_cinematiccut
+sound: mus_sfx_sparkles
+sound: mus_sfx_a_swordappear
+sound: mus_sfx_voice_jafe
+^spr_hg_debris_mask$

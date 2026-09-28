@@ -1,0 +1,11 @@
+^spr_torielboss
+^spr_firebullet$
+^spr_handbullet$
+^spr_torheart$
+^spr_torheartbreak$
+^spr_theartshards$
+^spr_bulletgenmd$
+^spr_blconsm$
+^spr_blconwdshrt$
+sound: snd_txttor
+sound: snd_txttor2

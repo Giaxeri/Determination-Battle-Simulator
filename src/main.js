@@ -5,6 +5,11 @@ import { NapstablookBattle } from './napstablook.js';
 import { MettatonBattle } from './mettaton.js';
 import { MuffetBattle } from './muffet.js';
 import { Battle } from './battle.js';
+import { TorielBattle } from './toriel.js';
+import { PapyrusBattle } from './papyrus.js';
+import { AsgoreBattle } from './asgore.js';
+import { AsrielBattle } from './asriel.js';
+import { SansBattle } from './sans.js';
 import { buildUI, layout, updateUI, refreshVolume } from './ui.js';
 import { buildSpanishSprites } from './lang/sprites_es.js';
 
@@ -43,7 +48,8 @@ function input() {
 
 // ---------- Escenas: menú principal -> lista del jefe -> combate ----------
 let scene;
-const CLASSES = { undyne: Battle, muffet: MuffetBattle, napstablook: NapstablookBattle, mettaton: MettatonBattle };
+const CLASSES = { undyne: Battle, muffet: MuffetBattle, napstablook: NapstablookBattle, mettaton: MettatonBattle,
+                  toriel: TorielBattle, papyrus: PapyrusBattle, asgore: AsgoreBattle, asriel: AsrielBattle, sans: SansBattle };
 function toMenu(page = 0, boss = 0) {
   stopMusic(); window.battle = null;
   scene = new BossMenu(item => {

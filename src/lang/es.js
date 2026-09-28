@@ -17,7 +17,6 @@ ES.ui = {
   'Left / Right on Language: English / Español.': 'Izquierda / Derecha en Idioma: English / Español.',
   'Z on Name: choose the name used in battle.': 'Z en Nombre: elige el nombre que usas en combate.',
   'X: go back.': 'X: volver.',
-  'Press Z to proceed · Press X to go back': 'Presiona Z para avanzar · Presiona X para regresar',
   'Name the fallen human.': 'Nombra al humano caído.', 'Quit': 'Salir', 'Backspace': 'Borrar', 'Done': 'Listo',
   'Up to 6 letters.': 'Hasta 6 letras.',
   'Press ESC to return to the menu': 'Pulsa ESC para volver al menú',
@@ -246,3 +245,12 @@ ES.napsta = {
   lines: { check: 'oh, soy&MUY&chistoso', threat: 'anda,&hazlo.', flirt: 'solo te&sería&una&carga.', heh: 'je...', heheh: 'je&je...',
            letme: 'déjame&intentar&algo...', knew: 'lo&sabía...', ohno: 'ay&no...', gee: 'ay&vaya...' },
 };
+
+// ---------------------------------------------------------------- jefes con su propio archivo de textos
+import toriel from './es_toriel.js';
+import papyrus from './es_papyrus.js';
+import asgore from './es_asgore.js';
+import sans from './es_sans.js';
+import asriel from './es_asriel.js';
+export const BOSS_TEXTS = [toriel, papyrus, asgore, sans, asriel];
+for (const m of BOSS_TEXTS) { Object.assign(ES.ui, m.ui || {}); Object.assign(ES.items, m.items || {}); ES[m.ns] = { ...(ES[m.ns] || {}), ...(m.texts || {}) }; }

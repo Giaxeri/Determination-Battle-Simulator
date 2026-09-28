@@ -1,4 +1,17 @@
 {
+ "spr_savebt": {
+  "w": 110,
+  "h": 42,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   0,
+   109,
+   41
+  ],
+  "frames": 2
+ },
  "spr_fightbt": {
   "w": 110,
   "h": 42,
@@ -12,7 +25,33 @@
   ],
   "frames": 2
  },
+ "spr_fightbt_hollow": {
+  "w": 110,
+  "h": 42,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   0,
+   109,
+   41
+  ],
+  "frames": 2
+ },
  "spr_itembt": {
+  "w": 110,
+  "h": 42,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   0,
+   109,
+   41
+  ],
+  "frames": 2
+ },
+ "spr_itembt_hollow": {
   "w": 110,
   "h": 42,
   "ox": 0,
@@ -38,7 +77,33 @@
   ],
   "frames": 2
  },
+ "spr_sparebt_bandage": {
+  "w": 110,
+  "h": 42,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   3,
+   3,
+   106,
+   37
+  ],
+  "frames": 2
+ },
  "spr_talkbt": {
+  "w": 110,
+  "h": 42,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   0,
+   109,
+   41
+  ],
+  "frames": 2
+ },
+ "spr_talkbt_hollow": {
   "w": 110,
   "h": 42,
   "ox": 0,
@@ -194,7 +259,46 @@
   ],
   "frames": 2
  },
+ "spr_heartblue": {
+  "w": 16,
+  "h": 16,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   0,
+   15,
+   15
+  ],
+  "frames": 2
+ },
+ "spr_torheart": {
+  "w": 16,
+  "h": 16,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   0,
+   15,
+   15
+  ],
+  "frames": 1
+ },
  "spr_heartbreak": {
+  "w": 20,
+  "h": 16,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   0,
+   19,
+   15
+  ],
+  "frames": 1
+ },
+ "spr_torheartbreak": {
   "w": 20,
   "h": 16,
   "ox": 0,
@@ -219,6 +323,32 @@
    8
   ],
   "frames": 4
+ },
+ "spr_theartshards": {
+  "w": 10,
+  "h": 10,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   1,
+   1,
+   8,
+   8
+  ],
+  "frames": 4
+ },
+ "spr_handbullet": {
+  "w": 60,
+  "h": 40,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   22,
+   8,
+   38,
+   34
+  ],
+  "frames": 2
  },
  "spr_streambullet": {
   "w": 18,
@@ -259,6 +389,136 @@
   ],
   "frames": 1
  },
+ "spr_firebullet": {
+  "w": 16,
+  "h": 16,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   6,
+   8,
+   9,
+   11
+  ],
+  "frames": 2
+ },
+ "spr_cbone": {
+  "w": 44,
+  "h": 60,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   2,
+   10,
+   39,
+   58
+  ],
+  "frames": 1
+ },
+ "spr_oolbone": {
+  "w": 112,
+  "h": 60,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   3,
+   40,
+   105,
+   58
+  ],
+  "frames": 1
+ },
+ "spr_dbone": {
+  "w": 40,
+  "h": 60,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   3,
+   8,
+   38,
+   57
+  ],
+  "frames": 1
+ },
+ "spr_udebone": {
+  "w": 114,
+  "h": 60,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   35,
+   110,
+   57
+  ],
+  "frames": 1
+ },
+ "spr_skatebone": {
+  "w": 65,
+  "h": 60,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   20,
+   19,
+   38,
+   59
+  ],
+  "frames": 1
+ },
+ "spr_superbone": {
+  "w": 60,
+  "h": 240,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   15,
+   15,
+   40,
+   237
+  ],
+  "frames": 1
+ },
+ "spr_coolbus": {
+  "w": 75,
+  "h": 60,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   4,
+   4,
+   69,
+   58
+  ],
+  "frames": 1
+ },
+ "spr_tobydogeat": {
+  "w": 64,
+  "h": 38,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   8,
+   63,
+   37
+  ],
+  "frames": 8
+ },
+ "spr_tobydogsurprise": {
+  "w": 64,
+  "h": 38,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   10,
+   63,
+   37
+  ],
+  "frames": 2
+ },
  "spr_tobydogscoot": {
   "w": 64,
   "h": 38,
@@ -282,6 +542,32 @@
    3,
    27,
    14
+  ],
+  "frames": 2
+ },
+ "spr_bonebottom": {
+  "w": 13,
+  "h": 10,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   2,
+   4,
+   10,
+   11
+  ],
+  "frames": 2
+ },
+ "spr_bonetop": {
+  "w": 13,
+  "h": 10,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   2,
+   4,
+   10,
+   11
   ],
   "frames": 2
  },
@@ -479,6 +765,45 @@
    79
   ],
   "frames": 2
+ },
+ "spr_papyrusboss": {
+  "w": 148,
+  "h": 208,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   0,
+   147,
+   207
+  ],
+  "frames": 2
+ },
+ "spr_papyrusboss_anim": {
+  "w": 74,
+  "h": 104,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   0,
+   73,
+   103
+  ],
+  "frames": 1
+ },
+ "spr_papyrusboss_body": {
+  "w": 148,
+  "h": 208,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   0,
+   147,
+   207
+  ],
+  "frames": 1
  },
  "spr_papyrusboss_head": {
   "w": 44,
@@ -1780,6 +2105,721 @@
   ],
   "frames": 1
  },
+ "spr_mercybutton_normal": {
+  "w": 110,
+  "h": 42,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   0,
+   109,
+   41
+  ],
+  "frames": 1
+ },
+ "spr_mercybutton_shatter": {
+  "w": 110,
+  "h": 42,
+  "ox": 55,
+  "oy": 21,
+  "bbox": [
+   0,
+   0,
+   109,
+   41
+  ],
+  "frames": 11
+ },
+ "spr_asgore_bface": {
+  "w": 49,
+  "h": 54,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   0,
+   46,
+   53
+  ],
+  "frames": 5
+ },
+ "spr_asgore_brandish": {
+  "w": 300,
+  "h": 140,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   11,
+   0,
+   295,
+   121
+  ],
+  "frames": 14
+ },
+ "spr_asgore_prebrandish": {
+  "w": 170,
+  "h": 121,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   50,
+   30,
+   130,
+   120
+  ],
+  "frames": 1
+ },
+ "spr_asgoreb_cape": {
+  "w": 159,
+  "h": 82,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   0,
+   158,
+   80
+  ],
+  "frames": 2
+ },
+ "spr_asgoreb_ballarm": {
+  "w": 20,
+  "h": 20,
+  "ox": 0,
+  "oy": 15,
+  "bbox": [
+   0,
+   0,
+   19,
+   19
+  ],
+  "frames": 1
+ },
+ "spr_asgoreb_arml": {
+  "w": 22,
+  "h": 39,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   1,
+   0,
+   21,
+   29
+  ],
+  "frames": 1
+ },
+ "spr_asgoreb_armr": {
+  "w": 24,
+  "h": 42,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   1,
+   2,
+   21,
+   30
+  ],
+  "frames": 1
+ },
+ "spr_asgoreb_head1": {
+  "w": 47,
+  "h": 45,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   0,
+   46,
+   44
+  ],
+  "frames": 1
+ },
+ "spr_asgoreb_armor": {
+  "w": 115,
+  "h": 55,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   0,
+   114,
+   54
+  ],
+  "frames": 1
+ },
+ "spr_asgoreb_dress": {
+  "w": 65,
+  "h": 34,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   0,
+   64,
+   33
+  ],
+  "frames": 1
+ },
+ "spr_asgoreb_legs": {
+  "w": 63,
+  "h": 28,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   0,
+   62,
+   27
+  ],
+  "frames": 1
+ },
+ "spr_asgoreb_feet": {
+  "w": 85,
+  "h": 9,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   0,
+   84,
+   8
+  ],
+  "frames": 1
+ },
+ "spr_asgorespear": {
+  "w": 240,
+  "h": 62,
+  "ox": 60,
+  "oy": 31,
+  "bbox": [
+   0,
+   7,
+   229,
+   53
+  ],
+  "frames": 1
+ },
+ "spr_spearhandr": {
+  "w": 20,
+  "h": 14,
+  "ox": 10,
+  "oy": 7,
+  "bbox": [
+   1,
+   1,
+   18,
+   13
+  ],
+  "frames": 1
+ },
+ "spr_spearhandl": {
+  "w": 20,
+  "h": 14,
+  "ox": 10,
+  "oy": 7,
+  "bbox": [
+   1,
+   0,
+   18,
+   12
+  ],
+  "frames": 1
+ },
+ "spr_torheartbreak_again": {
+  "w": 20,
+  "h": 16,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   0,
+   19,
+   15
+  ],
+  "frames": 1
+ },
+ "spr_torheart_again": {
+  "w": 16,
+  "h": 16,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   0,
+   15,
+   15
+  ],
+  "frames": 1
+ },
+ "spr_asgore_kneeldeath": {
+  "w": 366,
+  "h": 196,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   0,
+   365,
+   195
+  ],
+  "frames": 1
+ },
+ "spr_asgore_kneel": {
+  "w": 183,
+  "h": 97,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   12,
+   182,
+   96
+  ],
+  "frames": 1
+ },
+ "spr_asgore_lastface": {
+  "w": 53,
+  "h": 54,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   2,
+   3,
+   48,
+   50
+  ],
+  "frames": 10
+ },
+ "spr_asgore_eyeflash": {
+  "w": 13,
+  "h": 13,
+  "ox": 6,
+  "oy": 6,
+  "bbox": [
+   1,
+   1,
+   11,
+   11
+  ],
+  "frames": 6
+ },
+ "spr_asgore_eyeflash_serious": {
+  "w": 13,
+  "h": 13,
+  "ox": 6,
+  "oy": 6,
+  "bbox": [
+   0,
+   0,
+   12,
+   12
+  ],
+  "frames": 6
+ },
+ "spr_asgore_flashsilhouette": {
+  "w": 159,
+  "h": 113,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   0,
+   158,
+   112
+  ],
+  "frames": 1
+ },
+ "spr_asgore_swipe_spear": {
+  "w": 196,
+  "h": 220,
+  "ox": 98,
+  "oy": 17,
+  "bbox": [
+   0,
+   0,
+   192,
+   219
+  ],
+  "frames": 7
+ },
+ "spr_asgore_swipe_nospear": {
+  "w": 196,
+  "h": 220,
+  "ox": 98,
+  "oy": 17,
+  "bbox": [
+   6,
+   15,
+   174,
+   132
+  ],
+  "frames": 7
+ },
+ "spr_firebullet_noc": {
+  "w": 16,
+  "h": 16,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   5,
+   6,
+   10,
+   11
+  ],
+  "frames": 2
+ },
+ "spr_firebullet_center_generous": {
+  "w": 16,
+  "h": 16,
+  "ox": 8,
+  "oy": 8,
+  "bbox": [
+   7,
+   7,
+   9,
+   10
+  ],
+  "frames": 2
+ },
+ "spr_handbullet_old_d": {
+  "w": 52,
+  "h": 38,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   10,
+   15,
+   40,
+   37
+  ],
+  "frames": 1
+ },
+ "spr_handbullet_old_l": {
+  "w": 38,
+  "h": 52,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   15,
+   25,
+   37
+  ],
+  "frames": 1
+ },
+ "spr_handbullet_old_r": {
+  "w": 38,
+  "h": 52,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   15,
+   13,
+   38,
+   37
+  ],
+  "frames": 1
+ },
+ "spr_handbullet_old_u": {
+  "w": 52,
+  "h": 38,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   10,
+   0,
+   40,
+   20
+  ],
+  "frames": 1
+ },
+ "spr_s_bonebul_top": {
+  "w": 10,
+  "h": 6,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   0,
+   9,
+   5
+  ],
+  "frames": 1
+ },
+ "spr_s_bonewall": {
+  "w": 10,
+  "h": 50,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   1,
+   3,
+   8,
+   46
+  ],
+  "frames": 1
+ },
+ "spr_s_bonebul_bottom": {
+  "w": 10,
+  "h": 6,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   0,
+   9,
+   5
+  ],
+  "frames": 1
+ },
+ "spr_s_bonewall_tall": {
+  "w": 10,
+  "h": 200,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   1,
+   3,
+   8,
+   195
+  ],
+  "frames": 1
+ },
+ "spr_s_bonestab_v": {
+  "w": 10,
+  "h": 100,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   1,
+   3,
+   8,
+   95
+  ],
+  "frames": 1
+ },
+ "spr_s_bonestab_v_wide": {
+  "w": 202,
+  "h": 100,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   1,
+   3,
+   199,
+   95
+  ],
+  "frames": 1
+ },
+ "spr_s_bonestab_h": {
+  "w": 100,
+  "h": 10,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   3,
+   1,
+   96,
+   8
+  ],
+  "frames": 1
+ },
+ "spr_s_bonestab_h_tall": {
+  "w": 100,
+  "h": 202,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   3,
+   1,
+   96,
+   199
+  ],
+  "frames": 1
+ },
+ "spr_s_boneloop": {
+  "w": 10,
+  "h": 40,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   3,
+   5,
+   6,
+   35
+  ],
+  "frames": 1
+ },
+ "spr_s_boneloop_out": {
+  "w": 14,
+  "h": 44,
+  "ox": 2,
+  "oy": 2,
+  "bbox": [
+   5,
+   6,
+   8,
+   37
+  ],
+  "frames": 1
+ },
+ "spr_s_bonewall_wide": {
+  "w": 200,
+  "h": 10,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   5,
+   3,
+   195,
+   7
+  ],
+  "frames": 1
+ },
+ "spr_emptyborder": {
+  "w": 165,
+  "h": 165,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   0,
+   164,
+   164
+  ],
+  "frames": 1
+ },
+ "spr_sans_z_battle": {
+  "w": 26,
+  "h": 29,
+  "ox": 13,
+  "oy": 14,
+  "bbox": [
+   0,
+   0,
+   25,
+   28
+  ],
+  "frames": 1
+ },
+ "spr_bof_what": {
+  "w": 16,
+  "h": 16,
+  "ox": 8,
+  "oy": 8,
+  "bbox": [
+   0,
+   0,
+   14,
+   15
+  ],
+  "frames": 4
+ },
+ "spr_heartblue_r": {
+  "w": 16,
+  "h": 16,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   0,
+   15,
+   15
+  ],
+  "frames": 2
+ },
+ "spr_heartblue_l": {
+  "w": 16,
+  "h": 16,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   0,
+   15,
+   15
+  ],
+  "frames": 2
+ },
+ "spr_heartblue_u": {
+  "w": 16,
+  "h": 16,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   0,
+   15,
+   15
+  ],
+  "frames": 2
+ },
+ "spr_heart_battle_pl": {
+  "w": 16,
+  "h": 16,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   0,
+   15,
+   15
+  ],
+  "frames": 2
+ },
+ "spr_sansb_legs": {
+  "w": 44,
+  "h": 23,
+  "ox": 21,
+  "oy": 11,
+  "bbox": [
+   0,
+   0,
+   43,
+   22
+  ],
+  "frames": 1
+ },
+ "spr_sansb_legs_sit": {
+  "w": 52,
+  "h": 17,
+  "ox": 26,
+  "oy": 8,
+  "bbox": [
+   0,
+   0,
+   51,
+   16
+  ],
+  "frames": 1
+ },
+ "spr_sansb_torso": {
+  "w": 72,
+  "h": 35,
+  "ox": 36,
+  "oy": 12,
+  "bbox": [
+   0,
+   0,
+   71,
+   34
+  ],
+  "frames": 8
+ },
+ "spr_sansb_blueeye": {
+  "w": 34,
+  "h": 32,
+  "ox": 17,
+  "oy": 16,
+  "bbox": [
+   1,
+   1,
+   32,
+   30
+  ],
+  "frames": 2
+ },
  "spr_sansb_face": {
   "w": 32,
   "h": 32,
@@ -1792,6 +2832,344 @@
    29
   ],
   "frames": 15
+ },
+ "spr_sansb_face_sweat": {
+  "w": 32,
+  "h": 32,
+  "ox": 16,
+  "oy": 15,
+  "bbox": [
+   0,
+   0,
+   31,
+   8
+  ],
+  "frames": 3
+ },
+ "spr_sansb_rightstrike": {
+  "w": 97,
+  "h": 55,
+  "ox": 33,
+  "oy": 12,
+  "bbox": [
+   0,
+   0,
+   96,
+   54
+  ],
+  "frames": 6
+ },
+ "spr_sansb_handdown": {
+  "w": 64,
+  "h": 73,
+  "ox": 30,
+  "oy": 34,
+  "bbox": [
+   0,
+   0,
+   63,
+   72
+  ],
+  "frames": 5
+ },
+ "spr_sansb_handup": {
+  "w": 64,
+  "h": 73,
+  "ox": 30,
+  "oy": 34,
+  "bbox": [
+   0,
+   0,
+   63,
+   72
+  ],
+  "frames": 6
+ },
+ "spr_gasterblaster": {
+  "w": 43,
+  "h": 57,
+  "ox": 21,
+  "oy": 28,
+  "bbox": [
+   0,
+   0,
+   42,
+   56
+  ],
+  "frames": 6
+ },
+ "spr_krmeter": {
+  "w": 23,
+  "h": 10,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   0,
+   22,
+   9
+  ],
+  "frames": 1
+ },
+ "spr_torielboss": {
+  "w": 72,
+  "h": 102,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   1,
+   71,
+   101
+  ],
+  "frames": 1
+ },
+ "spr_torielboss_mouthcover": {
+  "w": 72,
+  "h": 102,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   7,
+   0,
+   63,
+   101
+  ],
+  "frames": 1
+ },
+ "spr_torielboss_sadhappy": {
+  "w": 72,
+  "h": 102,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   0,
+   71,
+   101
+  ],
+  "frames": 2
+ },
+ "spr_torielboss_sad": {
+  "w": 72,
+  "h": 102,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   0,
+   71,
+   101
+  ],
+  "frames": 1
+ },
+ "spr_torielboss_sad2": {
+  "w": 72,
+  "h": 102,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   0,
+   71,
+   101
+  ],
+  "frames": 1
+ },
+ "spr_torielboss_sidesad": {
+  "w": 72,
+  "h": 102,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   0,
+   71,
+   101
+  ],
+  "frames": 1
+ },
+ "spr_torielboss_neutral": {
+  "w": 72,
+  "h": 102,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   0,
+   71,
+   101
+  ],
+  "frames": 1
+ },
+ "spr_torielboss_sidesad2": {
+  "w": 72,
+  "h": 102,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   0,
+   71,
+   101
+  ],
+  "frames": 1
+ },
+ "spr_torielboss_sidesadhappy": {
+  "w": 72,
+  "h": 102,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   0,
+   71,
+   101
+  ],
+  "frames": 1
+ },
+ "spr_torielboss_hurt": {
+  "w": 72,
+  "h": 102,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   0,
+   71,
+   101
+  ],
+  "frames": 1
+ },
+ "spr_torielboss_side": {
+  "w": 72,
+  "h": 102,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   0,
+   71,
+   101
+  ],
+  "frames": 1
+ },
+ "spr_torielboss_reallyhurt": {
+  "w": 72,
+  "h": 102,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   0,
+   71,
+   101
+  ],
+  "frames": 1
+ },
+ "spr_torielboss_kneel": {
+  "w": 72,
+  "h": 102,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   6,
+   24,
+   71,
+   101
+  ],
+  "frames": 1
+ },
+ "spr_torielboss_kneelsmile": {
+  "w": 72,
+  "h": 102,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   6,
+   24,
+   71,
+   101
+  ],
+  "frames": 1
+ },
+ "spr_torielboss_kneelsmile2": {
+  "w": 144,
+  "h": 150,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   0,
+   143,
+   149
+  ],
+  "frames": 1
+ },
+ "spr_torielboss_kneelanguish": {
+  "w": 72,
+  "h": 102,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   6,
+   25,
+   71,
+   101
+  ],
+  "frames": 1
+ },
+ "spr_torielboss_kneelanguish2": {
+  "w": 72,
+  "h": 102,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   6,
+   25,
+   71,
+   101
+  ],
+  "frames": 1
+ },
+ "spr_torielboss_murdered": {
+  "w": 72,
+  "h": 102,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   0,
+   71,
+   101
+  ],
+  "frames": 2
+ },
+ "spr_torielboss_suicide": {
+  "w": 72,
+  "h": 102,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   0,
+   71,
+   101
+  ],
+  "frames": 1
+ },
+ "spr_torielboss_kneel_incredulous": {
+  "w": 72,
+  "h": 102,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   6,
+   24,
+   71,
+   101
+  ],
+  "frames": 1
  },
  "spr_target": {
   "w": 562,
@@ -1831,6 +3209,71 @@
    99
   ],
   "frames": 6
+ },
+ "spr_pressz_press": {
+  "w": 44,
+  "h": 44,
+  "ox": 20,
+  "oy": 20,
+  "bbox": [
+   4,
+   5,
+   39,
+   15
+  ],
+  "frames": 1
+ },
+ "spr_pressz_z": {
+  "w": 44,
+  "h": 44,
+  "ox": 20,
+  "oy": 20,
+  "bbox": [
+   17,
+   20,
+   29,
+   40
+  ],
+  "frames": 1
+ },
+ "spr_hyperfist": {
+  "w": 100,
+  "h": 220,
+  "ox": 50,
+  "oy": 110,
+  "bbox": [
+   2,
+   12,
+   99,
+   163
+  ],
+  "frames": 6
+ },
+ "spr_regfist": {
+  "w": 50,
+  "h": 110,
+  "ox": 25,
+  "oy": 55,
+  "bbox": [
+   8,
+   6,
+   45,
+   73
+  ],
+  "frames": 5
+ },
+ "spr_infinitysign": {
+  "w": 21,
+  "h": 8,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   0,
+   20,
+   7
+  ],
+  "frames": 1
  },
  "spr_napstablook_d": {
   "w": 17,
@@ -1961,5 +3404,642 @@
    15
   ],
   "frames": 2
+ },
+ "spr_afinal_orbwing": {
+  "w": 48,
+  "h": 62,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   7,
+   5,
+   46,
+   59
+  ],
+  "frames": 4
+ },
+ "spr_afinal_orb": {
+  "w": 41,
+  "h": 34,
+  "ox": 20,
+  "oy": 17,
+  "bbox": [
+   0,
+   2,
+   40,
+   33
+  ],
+  "frames": 3
+ },
+ "spr_afinal_stem": {
+  "w": 27,
+  "h": 50,
+  "ox": 13,
+  "oy": 25,
+  "bbox": [
+   0,
+   0,
+   26,
+   48
+  ],
+  "frames": 5
+ },
+ "spr_afinal_cosmoswing": {
+  "w": 156,
+  "h": 113,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   0,
+   155,
+   112
+  ],
+  "frames": 1
+ },
+ "spr_afinal_face": {
+  "w": 65,
+  "h": 45,
+  "ox": 32,
+  "oy": 22,
+  "bbox": [
+   0,
+   1,
+   62,
+   43
+  ],
+  "frames": 8
+ },
+ "spr_afinal_face_cry": {
+  "w": 65,
+  "h": 45,
+  "ox": 32,
+  "oy": 22,
+  "bbox": [
+   0,
+   1,
+   62,
+   43
+  ],
+  "frames": 3
+ },
+ "spr_afinal_face_cry2": {
+  "w": 65,
+  "h": 45,
+  "ox": 32,
+  "oy": 22,
+  "bbox": [
+   0,
+   1,
+   62,
+   43
+  ],
+  "frames": 2
+ },
+ "spr_afinal_arm": {
+  "w": 20,
+  "h": 75,
+  "ox": 9,
+  "oy": 2,
+  "bbox": [
+   0,
+   1,
+   19,
+   74
+  ],
+  "frames": 4
+ },
+ "spr_afinal_shoulder": {
+  "w": 19,
+  "h": 15,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   1,
+   1,
+   15,
+   13
+  ],
+  "frames": 4
+ },
+ "spr_asrielpanels": {
+  "w": 200,
+  "h": 110,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   0,
+   199,
+   109
+  ],
+  "frames": 5
+ },
+ "spr_asrielarm_r": {
+  "w": 33,
+  "h": 49,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   0,
+   16,
+   48
+  ],
+  "frames": 1
+ },
+ "spr_asrielarm_r_shrug": {
+  "w": 37,
+  "h": 26,
+  "ox": 0,
+  "oy": 6,
+  "bbox": [
+   0,
+   0,
+   36,
+   25
+  ],
+  "frames": 1
+ },
+ "spr_asriellocket": {
+  "w": 33,
+  "h": 10,
+  "ox": 17,
+  "oy": 3,
+  "bbox": [
+   6,
+   4,
+   26,
+   8
+  ],
+  "frames": 1
+ },
+ "spr_asrielshoulder_r": {
+  "w": 14,
+  "h": 8,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   0,
+   13,
+   7
+  ],
+  "frames": 1
+ },
+ "spr_asrieltorso": {
+  "w": 42,
+  "h": 67,
+  "ox": 20,
+  "oy": 2,
+  "bbox": [
+   1,
+   0,
+   40,
+   65
+  ],
+  "frames": 1
+ },
+ "spr_torsoball": {
+  "w": 42,
+  "h": 67,
+  "ox": 20,
+  "oy": 2,
+  "bbox": [
+   7,
+   0,
+   33,
+   15
+  ],
+  "frames": 1
+ },
+ "spr_asrielfeet": {
+  "w": 32,
+  "h": 12,
+  "ox": 15,
+  "oy": -58,
+  "bbox": [
+   1,
+   0,
+   31,
+   11
+  ],
+  "frames": 1
+ },
+ "spr_asrielcollar": {
+  "w": 49,
+  "h": 16,
+  "ox": 24,
+  "oy": 8,
+  "bbox": [
+   0,
+   0,
+   48,
+   14
+  ],
+  "frames": 1
+ },
+ "spr_asrielhead": {
+  "w": 33,
+  "h": 36,
+  "ox": 16,
+  "oy": 18,
+  "bbox": [
+   0,
+   0,
+   32,
+   35
+  ],
+  "frames": 5
+ },
+ "spr_asriel_headshake_sassy": {
+  "w": 31,
+  "h": 35,
+  "ox": 15,
+  "oy": 17,
+  "bbox": [
+   0,
+   1,
+   30,
+   34
+  ],
+  "frames": 4
+ },
+ "spr_asriel_afterimager": {
+  "w": 63,
+  "h": 116,
+  "ox": 31,
+  "oy": 19,
+  "bbox": [
+   1,
+   2,
+   61,
+   113
+  ],
+  "frames": 1
+ },
+ "spr_regstar": {
+  "w": 23,
+  "h": 23,
+  "ox": 11,
+  "oy": 11,
+  "bbox": [
+   9,
+   10,
+   13,
+   14
+  ],
+  "frames": 1
+ },
+ "spr_stormstar": {
+  "w": 127,
+  "h": 121,
+  "ox": 63,
+  "oy": 60,
+  "bbox": [
+   10,
+   20,
+   110,
+   120
+  ],
+  "frames": 2
+ },
+ "spr_asriel_gunbolt": {
+  "w": 13,
+  "h": 11,
+  "ox": 6,
+  "oy": 5,
+  "bbox": [
+   6,
+   5,
+   6,
+   5
+  ],
+  "frames": 1
+ },
+ "spr_asriel_gunarm_shot": {
+  "w": 45,
+  "h": 112,
+  "ox": 22,
+  "oy": 24,
+  "bbox": [
+   0,
+   0,
+   43,
+   97
+  ],
+  "frames": 3
+ },
+ "spr_asriel_gunarm_unhinge": {
+  "w": 45,
+  "h": 112,
+  "ox": 22,
+  "oy": 24,
+  "bbox": [
+   0,
+   0,
+   44,
+   97
+  ],
+  "frames": 6
+ },
+ "spr_asriel_gunarm_meter": {
+  "w": 45,
+  "h": 112,
+  "ox": 22,
+  "oy": 24,
+  "bbox": [
+   12,
+   12,
+   32,
+   67
+  ],
+  "frames": 7
+ },
+ "spr_handlightning": {
+  "w": 60,
+  "h": 20,
+  "ox": 3,
+  "oy": 10,
+  "bbox": [
+   1,
+   2,
+   56,
+   19
+  ],
+  "frames": 1
+ },
+ "spr_rainbowtarget": {
+  "w": 20,
+  "h": 20,
+  "ox": 10,
+  "oy": 10,
+  "bbox": [
+   0,
+   0,
+   19,
+   19
+  ],
+  "frames": 2
+ },
+ "spr_rainbowbolt": {
+  "w": 32,
+  "h": 200,
+  "ox": 16,
+  "oy": 0,
+  "bbox": [
+   10,
+   0,
+   20,
+   199
+  ],
+  "frames": 2
+ },
+ "spr_asriel_swordextend": {
+  "w": 29,
+  "h": 133,
+  "ox": 8,
+  "oy": 10,
+  "bbox": [
+   0,
+   3,
+   22,
+   132
+  ],
+  "frames": 1
+ },
+ "spr_asriel_swordtwinkle": {
+  "w": 9,
+  "h": 9,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   4,
+   4,
+   4,
+   4
+  ],
+  "frames": 1
+ },
+ "spr_asriel_swordextend_shatter": {
+  "w": 29,
+  "h": 60,
+  "ox": 8,
+  "oy": 10,
+  "bbox": [
+   3,
+   3,
+   19,
+   59
+  ],
+  "frames": 1
+ },
+ "spr_asriel_swordsmear": {
+  "w": 158,
+  "h": 168,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   2,
+   1,
+   129,
+   167
+  ],
+  "frames": 1
+ },
+ "spr_asriel_sword": {
+  "w": 62,
+  "h": 67,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   0,
+   48,
+   66
+  ],
+  "frames": 1
+ },
+ "spr_asriel_swordlessarm": {
+  "w": 54,
+  "h": 43,
+  "ox": 10,
+  "oy": 25,
+  "bbox": [
+   7,
+   5,
+   46,
+   40
+  ],
+  "frames": 1
+ },
+ "spr_asriel_swordarm": {
+  "w": 63,
+  "h": 92,
+  "ox": 17,
+  "oy": 75,
+  "bbox": [
+   7,
+   2,
+   55,
+   90
+  ],
+  "frames": 1
+ },
+ "spr_asriel_swordarm_power": {
+  "w": 63,
+  "h": 112,
+  "ox": 17,
+  "oy": 95,
+  "bbox": [
+   1,
+   6,
+   47,
+   69
+  ],
+  "frames": 1
+ },
+ "spr_asriel_swordarm_half": {
+  "w": 83,
+  "h": 92,
+  "ox": 17,
+  "oy": 75,
+  "bbox": [
+   14,
+   10,
+   82,
+   90
+  ],
+  "frames": 1
+ },
+ "spr_beamcircle": {
+  "w": 16,
+  "h": 16,
+  "ox": 8,
+  "oy": 8,
+  "bbox": [
+   0,
+   0,
+   15,
+   15
+  ],
+  "frames": 1
+ },
+ "spr_redtarget": {
+  "w": 4,
+  "h": 4,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   1,
+   1,
+   2,
+   2
+  ],
+  "frames": 1
+ },
+ "spr_ultimabullet": {
+  "w": 39,
+  "h": 21,
+  "ox": 31,
+  "oy": 10,
+  "bbox": [
+   10,
+   6,
+   32,
+   14
+  ],
+  "frames": 1
+ },
+ "spr_hg_debris_small": {
+  "w": 52,
+  "h": 52,
+  "ox": 26,
+  "oy": 26,
+  "bbox": [
+   1,
+   0,
+   51,
+   51
+  ],
+  "frames": 1
+ },
+ "spr_hg_debris_mask": {
+  "w": 52,
+  "h": 52,
+  "ox": 26,
+  "oy": 26,
+  "bbox": [
+   8,
+   7,
+   43,
+   43
+  ],
+  "frames": 1
+ },
+ "spr_hg_horns": {
+  "w": 152,
+  "h": 44,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   1,
+   2,
+   147,
+   43
+  ],
+  "frames": 1
+ },
+ "spr_hg_jaws": {
+  "w": 48,
+  "h": 32,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   1,
+   44,
+   28
+  ],
+  "frames": 2
+ },
+ "spr_hg_leftovers": {
+  "w": 152,
+  "h": 159,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   0,
+   151,
+   158
+  ],
+  "frames": 1
+ },
+ "spr_hg_mainface": {
+  "w": 62,
+  "h": 96,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   15,
+   61,
+   95
+  ],
+  "frames": 1
+ },
+ "spr_hg_laughing": {
+  "w": 160,
+  "h": 155,
+  "ox": 0,
+  "oy": 0,
+  "bbox": [
+   0,
+   1,
+   154,
+   153
+  ],
+  "frames": 1
  }
 }

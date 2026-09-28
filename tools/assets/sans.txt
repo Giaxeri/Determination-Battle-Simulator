@@ -1,0 +1,20 @@
+# Sans (ruta genocida, "MEGALOVANIA")
+^spr_sansb_(legs|legs_sit|torso|blueeye|face|face_sweat|rightstrike|handdown|handup)$
+^spr_gasterblaster$
+^spr_s_bonebul_(top|bottom)$
+^spr_s_bonewall(_tall|_wide)?$
+^spr_s_bonestab_(v|v_wide|h|h_tall)$
+^spr_s_boneloop(_out)?$
+^spr_emptyborder$
+^spr_sans_z_battle$
+^spr_bof_what$
+^spr_heartblue(_r|_l|_u)?$
+^spr_heart_battle_pl$
+^spr_krmeter$
+sound: snd_txtsans
+sound: snd_b
+sound: snd_noise
+sound: mus_sfx_rainbowbeam_1
+sound: mus_sfx_a_gigatalk
+sound: mus_sfx_segapower
+sound: mus_sfx_cinematiccut

@@ -28,6 +28,11 @@ Made by Gianfry ([Giaxeri](https://github.com/Giaxeri)).
 | **Muffet** | *Spider Dance* | 16 | Purple (3 threads) | Purple tea intro, "Up Next" sign, the pet, Pay/Struggle and the telegram |
 | **Mettaton EX** | *Death by Glamour* | 17 | Yellow (shoots with Z) | RATINGS graph, typed essay, heart-to-hearts and the viewer call-in ending |
 | **Napstablook** | *Ghost Fight* | 4 | Red | ACT Cheer / Flirt / Threat, "Dapper Blook" and tears that speed up |
+| **Toriel** | *Heartache* | 6 | Red | Fire hands, flames that dodge you at low HP, sparing her 25 times or the kill ending |
+| **Papyrus** | *Bonetrousle* | 21 | Red and blue (gravity) | Blue attack, Flirt/Insult, the special attack with the dog, the capture instead of death |
+| **Asgore** | *ASGORE* | 18 | Red | He breaks MERCY, blue/orange trident swipes, fire patterns, Talk, the kneeling ending |
+| **Asriel Dreemurr** | *Hopes and Dreams* | 15 | Red | Star Blazing, Chaos Saber/Buster, Shocker Breaker, HYPER GONER, "But it refused.", SAVE and the goodbye |
+| **Sans** | *MEGALOVANIA* | 24 | Red and blue (4 walls) | Gaster Blasters, KARMA, he dodges every hit, the spare trap and the special attack |
 
 **Undyne the Undying**
 - Green mode: lessons −5 to −14 (aim the shield with the arrow keys). Red mode: orderb 0–7.
@@ -54,6 +59,36 @@ Made by Gianfry ([Giaxeri](https://github.com/Giaxeri)).
 - Answer anything else: "i knew it..." and they cry faster. Lower their HP: "you do know you cant kill ghosts, right?".
 - Translated from `obj_napstablook`, `obj_crygen1-3`, `blt_crybullet`, `blt_streambullet` and `blt_blookhat`.
 
+**Toriel**
+- All her fire patterns (helixes, side flames, one or two hands that drop chasing fire) with the game's boxes and timings.
+- At low HP her fire does less damage, the attack stops at 2 HP and then she only uses the fire that dodges you.
+- ACT: Check / Talk. MERCY 25 times goes through all her lines until she lets you go; killing her gives her last words (or the betrayal version) and her soul breaking.
+- Translated from `obj_torielboss`, `obj_1sidegen` and `blt_handbullet1/2`.
+
+**Papyrus**
+- Starts with the red soul; the blue attack turns your soul blue (gravity, hold UP to jump higher) and the music switches to Bonetrousle.
+- His 15 bone turns in order, the "special attack" (the dog steals the bone) and the "absolutely normal attack" (COOL DUDE, the bus, the giant bone).
+- ACT: Check / Flirt / Insult. He never kills you: at 0 HP **he captures you**, as in the game, and later fights start with his "you escaped" lines.
+- Translated from `obj_papyrusboss`, `blt_superbone`, `blt_sizebone`, `blt_topbone` and `blt_tobydogbone`.
+
+**Asgore**
+- The intro where he destroys the MERCY button (it's gone for the whole fight).
+- Trident swipes: blue hurts if you move, orange hurts if you stand still. Sine, helix and circle fire patterns; later turns get harder.
+- ACT: Check / Talk (lowers his ATK and DEF). At low HP he kneels: FIGHT or MERCY to end the fight.
+- Translated from `obj_asgoreb`, `obj_asgore_finalintro`, `obj_asgoreattackgen`, `obj_asgore_spearswipe` and the fire generators.
+
+**Asriel Dreemurr**
+- God of Hyperdeath: Star Blazing, Shocker Breaker (I and II), Chaos Saber, Chaos Buster, Galacta Blazing, Chaos Slicer, Chaos Blaster and HYPER GONER, in the game's order.
+- ACT: Check / Hope / Dream. You can't die here: at 0 HP you get **"But it refused."**, as in the game.
+- Final form: Struggle, SAVE your friends, save Asriel, and the goodbye.
+- Translated from `obj_asrielb`, `obj_asriel_body`, `obj_asrielfinal` and their attacks.
+
+**Sans**
+- Every attack in the game's order: bones, platforms, Gaster Blasters, the blue soul slammed against any wall.
+- KARMA (KR): no invincibility, poison that drains HP. He dodges every FIGHT until the end.
+- The spare trap, the special attack where he falls asleep, and the final hit.
+- Translated from `obj_sansb`, `obj_sansb_body`, `obj_sans_bonebul`, `obj_gasterblaster` and friends.
+
 ### Stats and items per boss
 
 Each fight uses the LV, equipment and items most common at that point of the game.
@@ -65,6 +100,11 @@ Items come in 2 pages: 4 of the weaker one and 2 of the stronger one.
 | Muffet | 1 / 20 | Ballet Shoes / Old Tutu | 4 Hot Dog...? / 2 Cinnamon Bunny |
 | Mettaton EX | 1 / 20 | Burnt Pan / Old Tutu | 4 Glamburger / 2 Legendary Hero |
 | Napstablook | 1 / 20 | Stick / Bandage | 2 Monster Candy + 1 Spider Donut |
+| Toriel | 1 / 20 | Toy Knife / Faded Ribbon | 2 Monster Candy + 1 Spider Donut |
+| Papyrus | 1 / 20 | Tough Glove / Manly Bandanna | 4 Nice Cream / 2 Cinnamon Bunny |
+| Asgore | 1 / 20 | Burnt Pan / Stained Apron | 4 Legendary Hero / 2 Face Steak |
+| Asriel Dreemurr | 1 / 20 | Worn Dagger / Heart Locket | 4 Legendary Hero / 2 Face Steak |
+| Sans | 19 / 92 | Real Knife / The Locket | 4 Legendary Hero / 2 Face Steak |
 
 - Muffet gets no spider items (in the game they skip straight to her ending).
 - Against Mettaton EX, the Glamburger and the Legendary Hero raise the RATINGS ("OnBrandFood").
@@ -78,7 +118,8 @@ Items come in 2 pages: 4 of the weaker one and 2 of the stronger one.
   - Language: English / Español.
   - Player name: up to 6 letters, with the game's naming screen. "Player" by default.
 - **Volume** with a draggable bar to the right of the fight; the M key mutes.
-- **Death like in the game**: the music stops, the soul breaks (`snd_break1`), shatters into pieces (`snd_break2`) and you go back to that boss's list.
+- **Death like in the game**: the music stops, the soul breaks (`snd_break1`), shatters into pieces (`snd_break2`) and you go back to that boss's list. (Papyrus captures you and Asriel refuses to let you die, as in the game.)
+- **Black background only** in every fight.
 - **Outside the fight area**:
   - On the menu: title, fan-game notice and credits.
   - In battle: only the volume bar and "Press ESC to return to the menu".
@@ -146,10 +187,17 @@ The sprites, fonts and sounds in `assets/` are extracted from the `data.win` of 
       muffet.js             Muffet's fight  (+ muffetbody.js)
       mettaton.js           Mettaton EX's fight  (+ mettbody.js, mettbullets.js)
       napstablook.js        Napstablook's fight
+      toriel.js             Toriel's fight
+      papyrus*.js           Papyrus's fight (+ bones, font and graphics)
+      asgore*.js            Asgore's fight (+ body and attacks)
+      asriel*.js            Asriel's fight (+ bodies and attacks)
+      sans*.js              Sans's fight (+ body, bullets, font and texts)
+      lang/es_<boss>.js     Spanish texts of each new boss
     tools/
       datawin.py            data.win reader (GameMaker Studio 1.4)
       extract.py            sprite, font and sound extractor
       check_es.mjs          checks that the Spanish texts fit
+      assets/<boss>.txt     sprites and sounds each boss needs (read by extract.py)
     assets/                 sprites, fonts, sound effects, music and icons
 
 ### Adding a new boss
@@ -160,7 +208,7 @@ The sprites, fonts and sounds in `assets/` are extracted from the `data.win` of 
 4. Define `itemSetup()` with 2 pages: 4 of the weaker item and 2 of the stronger one, the most common for that fight (fewer if the boss is from the early game).
 5. Keep the black background and call `this.gameOver()` when HP reaches 0, so death works like in the other fights.
 6. Put its texts in a `texts('<boss>', {...})` object, add the Spanish version to `src/lang/es.js` and run `node tools/check_es.mjs`.
-7. Add its sprites and sounds to `tools/extract.py`.
+7. List its sprites and sounds in `tools/assets/<boss>.txt` and run `tools/extract.py` again.
 
 ### Credits
 
@@ -189,6 +237,11 @@ Hecho por Gianfry ([Giaxeri](https://github.com/Giaxeri)).
 | **Muffet** | *Spider Dance* | 16 | Morada (3 hilos) | Té morado inicial, cartel "Siguiente", la mascota, Pagar/Forcejear y el telegrama |
 | **Mettaton EX** | *Death by Glamour* | 17 | Amarilla (dispara con Z) | AUDIENCIA con gráfica, ensayo con el teclado, charlas de corazón a corazón y la llamada final |
 | **Napstablook** | *Ghost Fight* | 4 | Roja | ACT Animar / Coquetear / Amenazar, "Blook Chic" y las lágrimas que se aceleran |
+| **Toriel** | *Heartache* | 6 | Roja | Manos de fuego, llamas que te esquivan con poca vida, perdonarla 25 veces o el final si la matas |
+| **Papyrus** | *Bonetrousle* | 21 | Roja y azul (gravedad) | Ataque azul, Coquetear/Insultar, el ataque especial con el perro, te captura en vez de matarte |
+| **Asgore** | *ASGORE* | 18 | Roja | Rompe PIEDAD, barridos azules/naranjas del tridente, patrones de fuego, Hablar, el final de rodillas |
+| **Asriel Dreemurr** | *Hopes and Dreams* | 15 | Roja | Star Blazing, Chaos Saber/Buster, Shocker Breaker, HYPER GONER, "Pero se negó.", SALVAR y la despedida |
+| **Sans** | *MEGALOVANIA* | 24 | Roja y azul (4 paredes) | Gaster Blasters, KARMA, esquiva todos los golpes, la trampa del perdón y el ataque especial |
 
 **Undyne la Inmortal**
 - Modo verde: lessons −5 a −14 (el escudo se orienta con las flechas). Modo rojo: orderb 0–7.
@@ -215,6 +268,36 @@ Hecho por Gianfry ([Giaxeri](https://github.com/Giaxeri)).
 - Si respondes otra cosa: "lo sabía..." y llora más rápido. Si le bajas la vida: "sabes que no puedes matar fantasmas, ¿no?".
 - Traducido de `obj_napstablook`, `obj_crygen1-3`, `blt_crybullet`, `blt_streambullet` y `blt_blookhat`.
 
+**Toriel**
+- Todos sus patrones de fuego (hélices, llamas laterales, una o dos manos que sueltan fuego que te persigue) con las cajas y tiempos del juego.
+- Con poca vida su fuego hace menos daño, el ataque se corta a 2 PV y después solo usa el fuego que te esquiva.
+- ACT: Revisar / Hablar. PIEDAD 25 veces recorre todas sus frases hasta que te deja ir; si la matas, sus últimas palabras (o la versión de la traición) y su alma que se rompe.
+- Traducido de `obj_torielboss`, `obj_1sidegen` y `blt_handbullet1/2`.
+
+**Papyrus**
+- Empieza con el alma roja; el ataque azul la vuelve azul (gravedad, mantén ARRIBA para saltar más) y la música pasa a Bonetrousle.
+- Sus 15 turnos de huesos en orden, el "ataque especial" (el perro se roba el hueso) y el "ataque absolutamente normal" (TIPO GENIAL, el bus, el hueso gigante).
+- ACT: Revisar / Coquetear / Insultar. Nunca te mata: a 0 PV **te captura**, como en el juego, y las siguientes peleas empiezan con sus frases de "te escapaste".
+- Traducido de `obj_papyrusboss`, `blt_superbone`, `blt_sizebone`, `blt_topbone` y `blt_tobydogbone`.
+
+**Asgore**
+- La intro en la que destruye el botón PIEDAD (desaparece toda la pelea).
+- Barridos del tridente: azul duele si te mueves, naranja si te quedas quieto. Fuegos en onda, hélice y círculo; los últimos turnos son más difíciles.
+- ACT: Revisar / Hablar (baja su ATQ y DEF). Con poca vida se arrodilla: LUCHAR o PIEDAD para terminar.
+- Traducido de `obj_asgoreb`, `obj_asgore_finalintro`, `obj_asgoreattackgen`, `obj_asgore_spearswipe` y los generadores de fuego.
+
+**Asriel Dreemurr**
+- Dios de la Hipermuerte: Star Blazing, Shocker Breaker (I y II), Chaos Saber, Chaos Buster, Galacta Blazing, Chaos Slicer, Chaos Blaster y HYPER GONER, en el orden del juego.
+- ACT: Revisar / Esperanza / Sueño. Aquí no se puede morir: a 0 PV sale **"Pero se negó."**, como en el juego.
+- Forma final: Forcejear, SALVAR a tus amigos, salvar a Asriel y la despedida.
+- Traducido de `obj_asrielb`, `obj_asriel_body`, `obj_asrielfinal` y sus ataques.
+
+**Sans**
+- Todos sus ataques en el orden del juego: huesos, plataformas, Gaster Blasters, el alma azul estrellada contra cualquier pared.
+- KARMA (KR): sin invencibilidad, veneno que baja la vida. Esquiva todos tus golpes hasta el final.
+- La trampa del perdón, el ataque especial en el que se duerme y el golpe final.
+- Traducido de `obj_sansb`, `obj_sansb_body`, `obj_sans_bonebul`, `obj_gasterblaster` y compañía.
+
 ### Estadísticas y objetos por jefe
 
 Cada combate usa el NV, el equipo y los objetos más habituales en ese punto del juego.
@@ -226,6 +309,11 @@ Los objetos van en 2 páginas: 4 del más flojo y 2 del más fuerte.
 | Muffet | 1 / 20 | Ballet Shoes / Old Tutu | 4 Hot Dog...? / 2 Conejo de Canela |
 | Mettaton EX | 1 / 20 | Burnt Pan / Old Tutu | 4 Glamburguesa / 2 Héroe Legendario |
 | Napstablook | 1 / 20 | Stick / Bandage | 2 Caramelo de Monstruo + 1 Dona de Araña |
+| Toriel | 1 / 20 | Toy Knife / Faded Ribbon | 2 Caramelo de Monstruo + 1 Dona de Araña |
+| Papyrus | 1 / 20 | Tough Glove / Manly Bandanna | 4 Buen Helado / 2 Conejo de Canela |
+| Asgore | 1 / 20 | Burnt Pan / Stained Apron | 4 Héroe Legendario / 2 Filete Facial |
+| Asriel Dreemurr | 1 / 20 | Worn Dagger / Heart Locket | 4 Héroe Legendario / 2 Filete Facial |
+| Sans | 19 / 92 | Real Knife / The Locket | 4 Héroe Legendario / 2 Filete Facial |
 
 - A Muffet no se le dan objetos de araña (en el juego la hacen saltar directamente al final).
 - Con Mettaton EX, la Glamburguesa y el Héroe Legendario suben la AUDIENCIA ("ComidaMarca").
@@ -239,7 +327,8 @@ Los objetos van en 2 páginas: 4 del más flojo y 2 del más fuerte.
   - Idioma: English / Español.
   - Nombre del jugador: hasta 6 letras, con la pantalla de nombre del juego. Por defecto "Jugador".
 - **Volumen** con una barra arrastrable a la derecha del combate; la tecla M silencia.
-- **Muerte como en el juego**: la música se corta, el alma se parte (`snd_break1`), estalla en pedazos (`snd_break2`) y vuelves a la lista de ese jefe.
+- **Muerte como en el juego**: la música se corta, el alma se parte (`snd_break1`), estalla en pedazos (`snd_break2`) y vuelves a la lista de ese jefe. (Papyrus te captura y Asriel no te deja morir, como en el juego.)
+- **Solo fondo negro** en todos los combates.
 - **Fuera del área de combate**:
   - En el menú: título, aviso de fan-game y créditos.
   - En combate: solo el volumen y "Pulsa ESC para volver al menú".
@@ -307,10 +396,17 @@ Los sprites, fuentes y sonidos de `assets/` se extraen del `data.win` de tu prop
       muffet.js             combate de Muffet  (+ muffetbody.js)
       mettaton.js           combate de Mettaton EX  (+ mettbody.js, mettbullets.js)
       napstablook.js        combate de Napstablook
+      toriel.js             combate de Toriel
+      papyrus*.js           combate de Papyrus (+ huesos, fuente y gráficos)
+      asgore*.js            combate de Asgore (+ cuerpo y ataques)
+      asriel*.js            combate de Asriel (+ cuerpos y ataques)
+      sans*.js              combate de Sans (+ cuerpo, balas, fuente y textos)
+      lang/es_<jefe>.js     textos en español de cada jefe nuevo
     tools/
       datawin.py            lector de data.win (GameMaker Studio 1.4)
       extract.py            extractor de sprites, fuentes y sonidos
       check_es.mjs          comprueba que los textos en español caben
+      assets/<jefe>.txt     sprites y sonidos que necesita cada jefe (los lee extract.py)
     assets/                 sprites, fuentes, efectos, música e iconos
 
 ### Añadir un jefe nuevo
@@ -321,7 +417,7 @@ Los sprites, fuentes y sonidos de `assets/` se extraen del `data.win` de tu prop
 4. Define `itemSetup()` con 2 páginas: 4 objetos del más flojo y 2 del más fuerte, los más comunes en esa pelea (menos si el jefe es de la zona inicial).
 5. Mantén el fondo negro y usa `this.gameOver()` al llegar a 0 de PV, para que la muerte funcione igual que en el resto.
 6. Pon sus textos en un objeto `texts('<jefe>', {...})`, añade la versión en español en `src/lang/es.js` y ejecuta `node tools/check_es.mjs`.
-7. Añade sus sprites y sonidos a `tools/extract.py`.
+7. Pon sus sprites y sonidos en `tools/assets/<jefe>.txt` y vuelve a ejecutar `tools/extract.py`.
 
 ### Créditos
 

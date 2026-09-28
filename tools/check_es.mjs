@@ -1,5 +1,5 @@
 // Comprueba que los textos en español caben en sus cajas y globos:  node tools/check_es.mjs
-import { ES } from '../src/lang/es.js';
+import { ES, BOSS_TEXTS } from '../src/lang/es.js';
 
 const vis = s => s.replace(/\^\d/g, '').replace(/\\E\d|\\[A-Z][A-Za-z0-9]?/g, '').replace(/[/%]+$/g, '');
 const RULES = {                                     // [letras por línea, líneas] de cada globo
@@ -8,6 +8,7 @@ const RULES = {                                     // [letras por línea, líne
   mettaton: { kill: [21, 4], kill2: [21, 4], call1: [21, 4], call2: [21, 4], call3: [21, 4], farewell: [21, 4], blook: [21, 4], fans: [20, 5] },
   essay: '*23,5', napsta: { random: [8, 4], dapper1: [8, 4], dapper2: [8, 4], lines: [8, 4], kill: [20, 4] },
 };
+for (const m of BOSS_TEXTS) if (m.rules) RULES[m.ns] = { ...(RULES[m.ns] || {}), ...m.rules };
 let bad = 0;
 function check(where, text, rule) {
   if (typeof text !== 'string') return;

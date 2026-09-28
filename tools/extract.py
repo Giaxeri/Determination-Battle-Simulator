@@ -24,7 +24,17 @@ SPRITES = [r'^spr_undynex_', r'^spr_(fight|talk|item|spare)bt$', r'^spr_heart$',
 SOUNDS = ['SND_TXT1', 'snd_hurtgirl', 'snd_txtund_hyper', 'snd_vaporized', 'snd_swallow', 'snd_power', 'snd_speedup', 'snd_spearappear', 'snd_spearrise', 'snd_arrow', 'snd_impact', 'snd_bell', 'snd_hurt1', 'snd_damage', 'snd_laz', 'snd_select', 'snd_squeak', 'SND_TXT2',
           'snd_mtt1', 'snd_mtt2', 'snd_mtt3', 'snd_mtt4', 'snd_mtt5', 'snd_mtt6', 'snd_mtt7', 'snd_mtt8', 'snd_mtt9', 'snd_heartshot', 'snd_mtt_hit',
           'snd_mtt_prebomb', 'snd_mtt_burst', 'snd_bomb', 'snd_noise', 'snd_block2', 'snd_phone', 'snd_heavydamage', 'snd_yeah', 'mus_explosion', 'snd_break1', 'snd_break2', 'snd_dogsalad']
-FONTS = ['fnt_main', 'fnt_curs', 'fnt_small', 'fnt_dmg', 'fnt_plain', 'fnt_maintext']
+# Cada jefe nuevo puede listar lo que necesita en tools/assets/<jefe>.txt:
+#   una línea por sprite (expresión regular) o "sound: <nombre>" por sonido
+_here = os.path.dirname(os.path.abspath(__file__))
+for _f in sorted(os.listdir(os.path.join(_here, 'assets'))) if os.path.isdir(os.path.join(_here, 'assets')) else []:
+    if not _f.endswith('.txt'): continue
+    for _l in open(os.path.join(_here, 'assets', _f), encoding='utf-8'):
+        _l = _l.split('#')[0].strip()
+        if not _l: continue
+        if _l.startswith('sound:'): SOUNDS.append(_l[6:].strip())
+        else: SPRITES.append(_l)
+FONTS = ['fnt_main', 'fnt_curs', 'fnt_small', 'fnt_dmg', 'fnt_plain', 'fnt_maintext', 'fnt_papyrus', 'fnt_comicsans']
 
 def main(src, out):
     d = DataWin(src)

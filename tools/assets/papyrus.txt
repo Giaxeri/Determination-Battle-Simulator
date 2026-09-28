@@ -1,0 +1,15 @@
+# Papyrus (src/papyrus.js)
+^spr_papyrusboss(_anim|_body|_head)?$
+^spr_bone(top|bottom)$
+^spr_superbone$
+^spr_skatebone$
+^spr_coolbus$
+^spr_(c|ool|d|ude)bone$
+^spr_tobydog(eat|surprise|scoot)$
+^spr_heartblue$
+^spr_(reg|hyper)fist$
+^spr_pressz_(press|z)$
+sound: snd_txtpap
+sound: snd_punchweak
+sound: snd_punchstrong
+sound: snd_saber3

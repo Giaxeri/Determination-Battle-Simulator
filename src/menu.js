@@ -3,6 +3,11 @@ import { ATTACKS } from './attacks.js';
 import { MUFFET_ATTACKS } from './muffet.js';
 import { NAPSTA_ATTACKS } from './napstablook.js';
 import { METT_ATTACKS } from './mettaton.js';
+import { TORIEL_ATTACKS } from './toriel.js';
+import { PAPYRUS_ATTACKS } from './papyrus.js';
+import { ASGORE_ATTACKS } from './asgore.js';
+import { ASRIEL_ATTACKS } from './asriel.js';
+import { SANS_ATTACKS } from './sans.js';
 import { SETTINGS, saveSettings, RESOLUTIONS, LANGS } from './settings.js';
 import { layout, refreshTexts } from './ui.js';
 import { tr, playerName } from './i18n.js';
@@ -16,6 +21,11 @@ export const BOSSES = [
   { name: 'Muffet', id: 'muffet', full: 'Spider Dance', attacks: MUFFET_ATTACKS },
   { name: 'Mettaton EX', id: 'mettaton', full: 'Death by Glamour', attacks: METT_ATTACKS },
   { name: 'Napstablook', id: 'napstablook', full: 'Ghost Fight', attacks: NAPSTA_ATTACKS },
+  { name: 'Toriel', id: 'toriel', full: 'Heartache', attacks: TORIEL_ATTACKS },
+  { name: 'Papyrus', id: 'papyrus', full: 'Bonetrousle', attacks: PAPYRUS_ATTACKS },
+  { name: 'Asgore', id: 'asgore', full: 'ASGORE', attacks: ASGORE_ATTACKS },
+  { name: 'Asriel Dreemurr', id: 'asriel', full: 'Hopes and Dreams', attacks: ASRIEL_ATTACKS },
+  { name: 'Sans', id: 'sans', full: 'MEGALOVANIA', attacks: SANS_ATTACKS },
 ];
 
 const VISIBLE = 11;          // filas visibles antes de desplazar la lista
@@ -134,7 +144,6 @@ export class BossMenu {
     drawSprite(ctx, 'spr_papyrusboss_head', 0, 452, 200 + Math.sin(t / 17 + 1) * 3);
     drawSprite(ctx, 'spr_napstablook_d', 0, 560, 230 + Math.sin(t / 25) * 6, { xs: 2, ys: 2, alpha: 0.7 + Math.sin(t / 25) * 0.2 });
     drawSprite(ctx, 'spr_floweynice', Math.floor(t / 15) % 2, 30, 360, { xs: 2, ys: 2 });
-    drawText(ctx, 'fnt_maintext', tr('Press Z to proceed · Press X to go back'), 150, 390, { color: '#808080' });
     this.dogX += 1.2; if (this.dogX > 700) this.dogX = -140;                              // el perro molesto pasa arrastrándose
     drawSprite(ctx, 'spr_tobydogscoot', Math.floor(t / 8) % 2, this.dogX, 408, { xs: 1.5, ys: 1.5 });
     drawSprite(ctx, 'spr_sleepdog', Math.floor(t / 30) % 2, 560, 440, { xs: 2, ys: 2 });

@@ -26,6 +26,10 @@ const SOUND_FILES = {
   break1: 'assets/sfx/snd_break1.wav', break2: 'assets/sfx/snd_break2.wav', dogsalad: 'assets/sfx/snd_dogsalad.wav',   // alma rota / Hot Dog
 };
 
+// Los jefes nuevos registran sus sonidos y su música al importarse (antes de loadAssets)
+export function registerSounds(map) { for (const [k, f] of Object.entries(map)) SOUND_FILES[k] = f.includes('/') ? f : `assets/sfx/${f}`; }
+export function registerMusic(map) { for (const [k, f] of Object.entries(map)) MUSIC[k] = f.includes('/') ? f : `assets/audio/${f}`; }
+
 // Música de cada jefe (la que carga scr_battlegroup)
 const MUSIC = { undyne: 'assets/audio/mus_x_undyne.ogg',   // "Battle Against a True Hero"
                 spider: 'assets/audio/mus_spider.ogg',     // "Spider Dance"
@@ -222,7 +226,6 @@ export function drawText(ctx, font, text, x, y, { color = '#fff', mono = 0 } = {
   const f = FNT[font]; let cx = x;
   const src = color === '#fff' ? f.img : tinted(f.img, color);
   for (const ch of String(text)) {
-    if (ch === '·') { ctx.fillStyle = color; ctx.fillRect(Math.round(cx), Math.round(y + 7), 2, 2); cx += mono || 4; continue; }
     const g = f.glyphs[ch] || f.glyphs[plainChar(ch)] || f.glyphs['?'];
     if (g) {
       const [gx, gy, gw, gh, shift, off] = g;

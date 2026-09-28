@@ -1,0 +1,19 @@
+# Asgore (combate final, ruta neutral/pacifista)
+^spr_asgoreb_(cape|ballarm|arml|armr|head1|armor|dress|legs|feet)$
+^spr_asgorespear$
+^spr_spearhand[lr]$
+^spr_asgore_(prebrandish|brandish|bface|kneel|kneeldeath|lastface)$
+^spr_asgore_(flashsilhouette|eyeflash|eyeflash_serious|swipe_spear|swipe_nospear)$
+^spr_firebullet_(center_generous|noc)$
+^spr_handbullet_old_[udlr]$
+^spr_mercybutton_(normal|shatter)$
+^spr_(fight|talk|item)bt_hollow$
+^spr_sparebt_bandage$
+^spr_torheart_again$
+^spr_torheartbreak_again$
+^spr_theartshard$
+sound: snd_txtasg
+sound: snd_credit_s
+sound: mus_sfx_cinematiccut
+sound: mus_sfx_swipe
+sound: mus_sfx_eyeflash
