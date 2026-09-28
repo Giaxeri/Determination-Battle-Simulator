@@ -423,7 +423,7 @@ export class PapyrusBattle extends Battle {
 
   // ---------------------------------------------------------------- el alma (obj_heart): roja (movement 1) o azul (movement 2)
   moveHeart(inp) {
-    const h = this.heart, H = inp.held, sp = this.sp, [l, r, t, b] = this.ideal();
+    const h = this.heart, H = inp.held, sp = H.cancel ? this.sp / 2 : this.sp, [l, r, t, b] = this.ideal();   // X: mitad de velocidad
     h.prevX = h.x; h.prevY = h.y;
     if (h.movement !== 2) {                            // roja: 4 px por frame en las 4 direcciones
       if (H.up) h.y -= sp; if (H.down) h.y += sp; if (H.left) h.x -= sp; if (H.right) h.x += sp;

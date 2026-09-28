@@ -40,7 +40,8 @@ addEventListener('blur', () => held.clear());
 function input() {
   const inp = { confirm: pressed.has('confirm'), cancel: pressed.has('cancel'),
                 left: pressed.has('left'), right: pressed.has('right'), up: pressed.has('up'), down: pressed.has('down'),
-                held: { up: held.has('up'), down: held.has('down'), left: held.has('left'), right: held.has('right') } };
+                held: { up: held.has('up'), down: held.has('down'), left: held.has('left'), right: held.has('right'),
+                        cancel: held.has('cancel'), confirm: held.has('confirm') } };
   inp.typed = typed.splice(0);
   pressed.clear();
   return inp;
@@ -66,14 +67,24 @@ function toMenu(page = 0, boss = 0) {
 toMenu();
 addEventListener('keydown', e => { if (e.key === 'Escape' && window.battle) toMenu(1, window.battle.bossIdx || 0); });   // Esc: volver a la lista de ataques
 
+// El juego va a 30 FPS como el original. Para que el movimiento sea parejo en pantallas de 60/120/144/165 Hz
+// se avanza un frame cada N refrescos de la pantalla (N = refresco / 30 redondeado); si la pantalla no encaja
+// (p. ej. 75 Hz) se usa el acumulador de tiempo de siempre.
 const STEP = 1000 / 30;
-let acc = 0, last = 0;
+let acc = 0, last = 0, lockN = 0, sinceStep = 0, tick = 0;
+const dts = [];
 function loop(now) {
-  acc += now - last; last = now;
-  if (acc > 250) acc = STEP;
-  let stepped = false;
-  while (acc >= STEP) { scene.update(input()); acc -= STEP; stepped = true; }
-  if (stepped) scene.draw(ctx);
+  const dt = now - last; last = now;
+  if (dt > 2 && dt < 100) { dts.push(dt); if (dts.length > 90) dts.shift(); }
+  if (++tick % 30 === 0 && dts.length >= 30) {                   // mide el refresco real de la pantalla
+    const med = [...dts].sort((a, b) => a - b)[dts.length >> 1], n = Math.max(1, Math.round(STEP / med));
+    lockN = Math.abs(n * med - STEP) <= STEP * 0.12 ? n : 0;
+  }
+  let steps = 0;
+  if (lockN && dt < 100) { if (++sinceStep >= lockN) { sinceStep = 0; steps = 1; } acc = 0; }
+  else { acc += dt; if (acc > 250) acc = STEP; while (acc >= STEP) { acc -= STEP; steps++; } }
+  for (let i = 0; i < steps; i++) scene.update(input());
+  if (steps) scene.draw(ctx);
   requestAnimationFrame(loop);
 }
 

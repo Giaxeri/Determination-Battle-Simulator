@@ -13,7 +13,8 @@ export function clipBox(ctx, b) {
   const { l, r, t, b: bt } = b.box;
   ctx.save(); ctx.beginPath(); ctx.rect(l + 5, t + 5, r - l - 5, bt - t - 5); ctx.clip();
 }
-const heartBox = b => spriteBBox(b.soul, b.heart.x, b.heart.y);
+// Zona que recibe daño: 4x4 en el centro del alma, como en Bad Time Simulator (el juego usa los 16x16 del sprite)
+const heartBox = b => ({ x1: b.heart.x + 6, y1: b.heart.y + 6, x2: b.heart.x + 9, y2: b.heart.y + 9 });
 
 // ---------------------------------------------------------------- blt_sizebone / blt_topbone
 export class Bone {

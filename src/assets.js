@@ -100,6 +100,13 @@ export async function loadAssets() {
   }));
 }
 
+// Copia de un lienzo que se leyó con getImageData: Chrome pasa esos lienzos a la CPU y dibujarlos
+// cada frame sobre el canvas del juego (GPU) es lento. La copia nunca se lee, así que sigue en la GPU.
+export function fresh(c, src) {
+  const n = document.createElement('canvas'); n.width = c.width; n.height = c.height;
+  n.getContext('2d').drawImage(c, 0, 0); n.src = src || c.src; return n;
+}
+
 // ---------- Letras del español (á é í ó ú ñ ü ¿ ¡) ----------
 // Las fuentes del juego no las traen: se construyen a partir de la letra base y una tilde dibujada
 // con los mismos "píxeles" de la fuente (fnt_main es fnt_maintext al doble de tamaño).
@@ -121,7 +128,7 @@ function addAccents(name) {
   const cellW = Math.max(...todo.map(c => G[ACCENTS[c][0]][2])), cellH = Math.max(...todo.map(c => G[ACCENTS[c][0]][3]));
   const c = document.createElement('canvas');
   c.width = Math.max(f.img.width, todo.length * (cellW + 8)); c.height = f.img.height + cellH + 2;
-  const g = c.getContext('2d');
+  const g = c.getContext('2d', { willReadFrequently: true });
   g.drawImage(f.img, 0, 0);
   const inkTop = ch => {                               // primera fila con tinta de una letra
     const [x, y, w, h] = G[ch], d = g.getImageData(x, y, w, h).data;
@@ -171,8 +178,7 @@ function addAccents(name) {
     g.putImageData(out, nx, ny);
     G[ch] = [nx, ny, gw, gh, shift, off];
   });
-  c.src = f.img.src + '#es';                            // clave para la caché de colores
-  f.img = c;
+  f.img = fresh(c, f.img.src + '#es');                  // (src = clave para la caché de colores)
 }
 function flipInk(rows) {                                // ¿ y ¡: la letra girada 180° dentro de su caja de tinta
   const h = rows.length, w = rows[0].length;

@@ -1,6 +1,6 @@
 // Sans: fuente fnt_comicsans (con sus letras del español), escritor de sus globos (typer 107/108/109),
 // dibujo de partes de sprites (draw_sprite_part_ext) y los sonidos largos de ambiente (pájaros y "chokedup").
-import { SPR, FNT, drawText, playSound, VOLUME, isMuted } from './assets.js';
+import { SPR, FNT, drawText, playSound, VOLUME, isMuted, fresh } from './assets.js';
 
 // ---------------------------------------------------------------- fuente fnt_comicsans (extract.py no la saca: la carga este módulo)
 const img = src => new Promise((ok, err) => { const i = new Image(); i.onload = () => ok(i); i.onerror = err; i.src = src; });
@@ -43,8 +43,7 @@ function addAccents() {
     g.putImageData(out, nx, ny);
     G[ch] = [nx, ny, gw, gh, shift, off];
   });
-  c.src = 'assets/fonts/fnt_comicsans.png#es';        // clave para la caché de colores de drawText
-  f.img = c;
+  f.img = fresh(c, 'assets/fonts/fnt_comicsans.png#es');   // copia en GPU (src = clave para la caché de colores de drawText)
 }
 
 // ---------------------------------------------------------------- escritor de los globos (OBJ_WRITER + SCR_TEXTTYPE)

@@ -2,7 +2,7 @@
 //  Asgore: cuerpo por partes (obj_asgoreb_body), tridente con brazos (obj_asgorespear) y
 //  sprites en español que hacen falta en su combate (botones huecos y el botón MERCY que se rompe).
 // ============================================================================
-import { drawSprite, SPR } from './assets.js';
+import { drawSprite, SPR, fresh } from './assets.js';
 import { ldx, ldy, pdir } from './gm.js';
 
 // obj_asgoreb_body: 8 partes a escala 2 que se mecen (party[i] += sin/cos(siner/15) * k)
@@ -83,9 +83,9 @@ function hollow(im, key) {
 export function buildAsgoreES() {
   if (SPR.spr_mercybutton_normal_es || !SPR.spr_fightbt_es || !SPR.spr_mercybutton_shatter) return;
   for (const n of ['spr_fightbt', 'spr_talkbt', 'spr_itembt'])
-    register(n + '_hollow_es', SPR[n + '_es'].frames.map((im, i) => hollow(im, n + i)), n + '_hollow');
+    register(n + '_hollow_es', SPR[n + '_es'].frames.map((im, i) => fresh(hollow(im, n + i))), n + '_hollow');
   const normal = hollow(SPR.spr_sparebt_es.frames[0], 'mercy');
-  register('spr_mercybutton_normal_es', [normal], 'spr_mercybutton_normal');
+  register('spr_mercybutton_normal_es', [fresh(normal)], 'spr_mercybutton_normal');
   // pedazos: píxeles con tinta de cada pedazo original (110x42, mismo encuadre que el botón)
   const W = 110, H = 42, pieces = SPR.spr_mercybutton_shatter.frames.map(im => {
     const c = canvas(W, H), g = c.getContext('2d'); g.drawImage(im, 0, 0);

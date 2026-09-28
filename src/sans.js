@@ -77,7 +77,9 @@ export class SansBattle extends Battle {
 
   // ---------------------------------------------------------------- utilidades para las balas
   add(o) { this.objs.push(o); return o; }
-  heartBox() { const H = this.H; return { x1: H.x, y1: H.y, x2: H.x + 15, y2: H.y + 15 }; }
+  heartBox() { const H = this.H; return { x1: H.x, y1: H.y, x2: H.x + 15, y2: H.y + 15 }; }   // caja completa (plataformas, botón FIGHT)
+  // Zona que recibe daño: 4x4 en el centro del alma, como en Bad Time Simulator (el juego usa los 16x16 del sprite)
+  hurtBox() { const H = this.H; return { x1: H.x + 6, y1: H.y + 6, x2: H.x + 9, y2: H.y + 9 }; }
   heartMoved() { const H = this.H; return Math.abs(H.xp - H.x) > 0.01 || Math.abs(H.yp - H.y) > 0.01; }
   menuHeartBox() {
     const S = this.state; let p = null;
@@ -297,7 +299,7 @@ export class SansBattle extends Battle {
 
   // ---------------------------------------------------------------- el alma (obj_heart: teclado, Step, bordes)
   heartStep(K) {
-    const H = this.H, sp = this.sp;
+    const H = this.H, sp = K.cancel ? this.sp / 2 : this.sp;     // X mantenida: mitad de velocidad
     if (H.mv === 1) { if (K.left) H.x -= sp; if (K.up) H.y -= sp; if (K.right) H.x += sp; if (K.down) H.y += sp; }
     if (H.mv === 2) { if (K.left) H.x -= sp; if (K.right) H.x += sp; if (K.up && H.js === 1 && H.vs === 0) { H.js = 2; H.vs = -6; } }
     if (H.mv === 11) { H.vs = 0; if (K.up) H.y -= sp; if (K.down) H.y += sp; if (K.left && H.js === 1 && H.hs === 0) { H.js = 2; H.hs = -6; } }

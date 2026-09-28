@@ -1,6 +1,6 @@
 // Papyrus: fuente fnt_papyrus (con sus letras del español), su escritor de globos (typer 22)
 // y los sprites con texto en inglés rehechos en español ("PRESS" del guante y las letras de hueso "Cool Dude").
-import { SPR, FNT, drawText, playSound } from './assets.js';
+import { SPR, FNT, drawText, playSound, fresh } from './assets.js';
 
 // ---------------------------------------------------------------- fuente fnt_papyrus (la carga este módulo: extract.py no la saca)
 const img = src => new Promise((ok, err) => { const i = new Image(); i.onload = () => ok(i); i.onerror = err; i.src = src; });
@@ -42,8 +42,7 @@ function addAccents() {
     g.putImageData(out, nx, ny);
     G[ch] = [nx, ny, gw, gh, shift, off];
   });
-  c.src = 'assets/fonts/fnt_papyrus.png#es';        // clave para la caché de colores de drawText
-  f.img = c;
+  f.img = fresh(c, 'assets/fonts/fnt_papyrus.png#es');   // copia en GPU (src = clave para la caché de colores de drawText)
 }
 
 // ---------------------------------------------------------------- escritor de los globos de Papyrus

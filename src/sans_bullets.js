@@ -36,7 +36,7 @@ export class BoneBul {
     return { width, le, rc_cut, rc_le };
   }
   collide(W) {
-    const [, , t, b] = W.ib, hb = W.heartBox(), c = this.c = this.clip(W), x = this.x;
+    const [, , t, b] = W.ib, hb = W.hurtBox(), c = this.c = this.clip(W), x = this.x;
     if (c.width > 0) {
       const rc = this.type === 2 ? R(x + 2 + c.rc_le, t + 11, x + 8 - c.rc_cut, this.y) : R(x + 2 + c.rc_le, this.y + 5, x + 8 - c.rc_cut, b - 6);
       if (hit(rc, hb) && (this.type !== 1 || W.heartMoved())) W.hit(this);    // User Event 2 (el azul solo si te mueves)
@@ -64,7 +64,7 @@ export class BoneBul {
 export class BoneWall {
   constructor(x, y, hs) { this.kind = 'bonewall'; this.x = x; this.y = y; this.hs = hs; this.ys = 1; this.karma = 6; }
   update() { if ((this.x < 0 && this.hs < 0) || (this.x > 640 && this.hs > 0)) { this.dead = true; return; } this.x += this.hs; }
-  collide(W) { if (hit(rotBBox('spr_s_bonewall', this.x, this.y, 0, 1, this.ys), W.heartBox())) W.hit(this); }
+  collide(W) { if (hit(rotBBox('spr_s_bonewall', this.x, this.y, 0, 1, this.ys), W.hurtBox())) W.hit(this); }
   draw(ctx, W) {
     clipped(ctx, W, () => { ctx.beginPath(); ctx.rect(0, 0, 640, this.y + 50 * this.ys); ctx.clip(); drawSprite(ctx, 'spr_s_bonewall', 0, this.x, this.y); });
   }
@@ -81,7 +81,7 @@ export function scrBwall(W, ht, hs, dist, count) {
 export class WallNormal {
   constructor(x, y, spr, hs, vs) { this.kind = 'bonewall'; this.x = x; this.y = y; this.spr = spr; this.hs = hs; this.vs = vs; this.karma = 6; }
   update() { this.x += this.hs; this.y += this.vs; if (Math.abs(this.x - 320) > 2500 || Math.abs(this.y - 240) > 2500) this.dead = true; }
-  collide(W) { if (hit(rotBBox(this.spr, this.x, this.y), W.heartBox())) W.hit(this); }
+  collide(W) { if (hit(rotBBox(this.spr, this.x, this.y), W.hurtBox())) W.hit(this); }
   draw(ctx) { drawSprite(ctx, this.spr, 0, this.x, this.y); }     // sin Draw propio: se dibuja entero
 }
 
@@ -131,7 +131,7 @@ export class BoneStab {
     }
     this.timer++;
   }
-  collide(W) { if (this.spr && hit(rotBBox(this.spr, this.x, this.y), W.heartBox())) W.hit(this); }
+  collide(W) { if (this.spr && hit(rotBBox(this.spr, this.x, this.y), W.hurtBox())) W.hit(this); }
   draw(ctx, W) {
     if (this.warn) return outline(ctx, ...this.warn, '#f00');
     if (this.spr && this.active) clipped(ctx, W, () => drawSprite(ctx, this.spr, 0, this.x, this.y));
@@ -147,7 +147,7 @@ export class BoneLoop {
     if (this.vs > 0 && this.y > b) this.y = t - 40;
     this.y += this.vs;
   }
-  collide(W) { if (hit(rotBBox('spr_s_boneloop', this.x, this.y), W.heartBox())) W.hit(this); }
+  collide(W) { if (hit(rotBBox('spr_s_boneloop', this.x, this.y), W.hurtBox())) W.hit(this); }
   draw(ctx, W) { clipped(ctx, W, () => drawSprite(ctx, 'spr_s_boneloop', 0, this.x, this.y)); }
 }
 
@@ -231,7 +231,7 @@ export class Blaster {
     }
   }
   collide(W) {
-    const hb = W.heartBox();
+    const hb = W.hurtBox();
     if (hit(rotBBox('spr_gasterblaster', this.x, this.y, this.ang, this.xs, this.ys), hb)) W.hit(this);
     if (this.con !== 7 || !this.beam) return;
     if (this.col_o === 1 && this.fade >= 0.8) {     // 8 líneas a lo ancho del rayo (collision_line)
