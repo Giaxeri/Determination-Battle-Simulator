@@ -1,4 +1,5 @@
 import { drawSprite, drawText, playSound, playMusic, stopMusic, setMusicVolume, registerSounds, registerMusic } from './assets.js';
+import { Smoother } from './smooth.js';
 import { Battle, BORDER, BUTTONS, ITEMS, playerAt, DmgWriter, Slice } from './battle.js';
 import { Writer } from './text.js';
 import { tr, sprL } from './i18n.js';
@@ -334,7 +335,11 @@ export class SansBattle extends Battle {
   }
 
   // ---------------------------------------------------------------- bucle
+  // Movimiento fluido: lo que se interpola entre frames al dibujar (src/smooth.js)
+  smoothList() { return [this.H, this.box, this.body, this.empty, this.target, this.dmgw, ...this.objs, ...this.mobjs]; }
   update(inp) {
+    if (!this._sm) { this._sm = new Smoother(); this.smooth = true; }
+    this._sm.capture(this.smoothList());
     if (this.state === 'gameover') return super.update(inp);
     super.update(inp);
     if (this.state === 'gameover') return;
@@ -424,6 +429,10 @@ export class SansBattle extends Battle {
 
   // ---------------------------------------------------------------- dibujo (en el orden de depth del juego)
   draw(ctx) {
+    const restore = this._sm && this.state !== 'gameover' ? this._sm.apply(this.smoothList(), this.alpha) : null;
+    try { this.drawFrame(ctx); } finally { if (restore) restore(); }
+  }
+  drawFrame(ctx) {
     if (this.state === 'gameover') return this.drawGameOver(ctx);
     ctx.fillStyle = '#000'; ctx.fillRect(0, 0, 640, 480);
     ctx.save();

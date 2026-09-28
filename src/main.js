@@ -81,10 +81,17 @@ function loop(now) {
     lockN = Math.abs(n * med - STEP) <= STEP * 0.12 ? n : 0;
   }
   let steps = 0;
-  if (lockN && dt < 100) { if (++sinceStep >= lockN) { sinceStep = 0; steps = 1; } acc = 0; }
-  else { acc += dt; if (acc > 250) acc = STEP; while (acc >= STEP) { acc -= STEP; steps++; } }
-  for (let i = 0; i < steps; i++) scene.update(input());
-  if (steps) scene.draw(ctx);
+  if (scene.smooth) {                                           // combate fluido: tiempo real + interpolación al dibujar
+    acc += dt; if (acc > 250) acc = STEP; while (acc >= STEP) { acc -= STEP; steps++; }
+    for (let i = 0; i < steps; i++) scene.update(input());
+    scene.alpha = scene.smooth ? Math.min(1, acc / STEP) : 1;
+    scene.draw(ctx);                                             // se dibuja en cada refresco de la pantalla
+  } else {
+    if (lockN && dt < 100) { if (++sinceStep >= lockN) { sinceStep = 0; steps = 1; } acc = 0; }
+    else { acc += dt; if (acc > 250) acc = STEP; while (acc >= STEP) { acc -= STEP; steps++; } }
+    for (let i = 0; i < steps; i++) scene.update(input());
+    if (steps) { scene.alpha = 1; scene.draw(ctx); }
+  }
   requestAnimationFrame(loop);
 }
 
