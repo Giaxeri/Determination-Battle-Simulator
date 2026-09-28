@@ -12,6 +12,8 @@ import { AsrielBattle } from './asriel.js';
 import { SansBattle } from './sans.js';
 import { buildUI, layout, updateUI, refreshVolume } from './ui.js';
 import { buildSpanishSprites } from './lang/sprites_es.js';
+import { Smoother } from './smooth.js';
+const smoother = window.dbsSmoother = new Smoother();
 
 const cv = document.getElementById('game');
 const ctx = cv.getContext('2d');
@@ -82,15 +84,20 @@ function loop(now) {
   }
   let steps = 0;
   if (scene.smooth) {                                           // combate fluido: tiempo real + interpolación al dibujar
-    acc += dt; if (acc > 250) acc = STEP; while (acc >= STEP) { acc -= STEP; steps++; }
-    for (let i = 0; i < steps; i++) scene.update(input());
-    scene.alpha = scene.smooth ? Math.min(1, acc / STEP) : 1;
-    scene.draw(ctx);                                             // se dibuja en cada refresco de la pantalla
+    acc += dt; if (acc > 250) acc = STEP;
+    while (acc >= STEP) {
+      acc -= STEP;
+      const before = scene; scene.update(input());
+      if (scene !== before) { smoother.reset(); if (!scene.smooth) break; }
+      smoother.step(scene);                                     // dibujo real (oculto) + foto de posiciones
+    }
+    if (scene.smooth) smoother.render(scene, ctx, Math.min(1, acc / STEP));   // cada refresco de la pantalla
+    else scene.draw(ctx);
   } else {
     if (lockN && dt < 100) { if (++sinceStep >= lockN) { sinceStep = 0; steps = 1; } acc = 0; }
     else { acc += dt; if (acc > 250) acc = STEP; while (acc >= STEP) { acc -= STEP; steps++; } }
     for (let i = 0; i < steps; i++) scene.update(input());
-    if (steps) { scene.alpha = 1; scene.draw(ctx); }
+    if (steps) scene.draw(ctx);
   }
   requestAnimationFrame(loop);
 }

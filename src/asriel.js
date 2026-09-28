@@ -1,4 +1,4 @@
-import { drawSprite, drawText, playSound, playMusic, stopMusic, setMusicVolume, registerMusic, registerSounds, SPR, FNT, VOLUME } from './assets.js';
+import { drawSprite, drawText, playSound, playMusic, stopMusic, setMusicVolume, registerMusic, registerSounds, SPR, FNT, VOLUME, RENDER } from './assets.js';
 import { Battle, BORDER, BUTTONS, ITEMS, playerAt } from './battle.js';
 import { texts, tr, sprL, playerName, isES } from './i18n.js';
 import { rnd } from './gm.js';
@@ -230,7 +230,7 @@ export class AsrielBattle extends Battle {
     if (s) { s.playbackRate.value = pitch; s.vol0 = vol; }
     return s;
   }
-  stopSnd(s) { if (s) try { s.onended = null; s.stop(); } catch (e) {} }
+  stopSnd(s) { if (s && !RENDER.ghost) try { s.onended = null; s.stop(); } catch (e) {} }
   setSndVol() { /* playSound no expone su ganancia: el volumen de los bucles se queda fijo */ }
   shakeView(x, y) { this.fshake = { x, y, first: true }; }          // obj_vsflowey_shaker
   playHurt() { playSound('hurt'); }

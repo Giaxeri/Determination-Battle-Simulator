@@ -1,4 +1,4 @@
-import { drawSprite, drawText, playSound, playMusic, stopMusic, setMusicVolume } from './assets.js';
+import { drawSprite, drawText, playSound, playMusic, stopMusic, setMusicVolume, RENDER } from './assets.js';
 import { Battle, BORDER, playerAt } from './battle.js';
 import { Writer } from './text.js';
 import { texts, tr } from './i18n.js';
@@ -319,7 +319,7 @@ export class MettatonBattle extends Battle {
     this.talk(T.farewell, 'x', 51, () => { playSound('impact'); this.body.fadewhite = 1; });
     this.mb.onLine = i => { const v = { 20: 0.8, 21: 0.6, 22: 0.4, 23: 0.2, 24: 0.1, 25: 0 }[i]; if (v !== undefined) setMusicVolume(v); };
   }
-  finish() { stopMusic(); if (this.onExit) { const f = this.onExit; this.onExit = null; f(); } }
+  finish() { if (RENDER.ghost) return; stopMusic(); if (this.onExit) { const f = this.onExit; this.onExit = null; f(); } }
 
   // ---------------------------------------------------------------- update
   update(inp) {

@@ -47,7 +47,7 @@ export { BORDER, BUTTONS, TXT, DmgWriter, Slice, Target, Vapor };
 
 export class Battle {
   // single = un ataque de ATTACKS para practicarlo solo (se repite cada turno); null = la pelea completa
-  constructor(single = null) { this.single = single; this.reset(); }
+  constructor(single = null) { this.single = single; this.smooth = true; this.reset(); }   // smooth: dibujo fluido (src/smooth.js)
 
   reset() {
     this.player = this.playerSetup();

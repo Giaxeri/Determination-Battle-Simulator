@@ -47,6 +47,9 @@ export function unlockAudio() {
   return unlocking;
 }
 
+// Dibujo "fantasma" (fotogramas interpolados entre dos frames del juego): no debe sonar ni tocar la música
+export const RENDER = { ghost: false };
+
 // Volumen: cámbialo aquí (0 = silencio, 1 = máximo). M silencia / reactiva todo.
 export const VOLUME = { master: 0.4, music: 0.8, sfx: 0.7 };
 let master = null, muted = false, musicFade = 1;
@@ -66,6 +69,7 @@ let music = null;
 const musicEl = new Audio(MUSIC_FILE);
 musicEl.loop = true; musicEl.preload = 'auto';
 export function playSound(name, { loop = false, volume = VOLUME.sfx } = {}) {
+  if (RENDER.ghost) return null;
   if (!actx || !SFX[name]) return null;
   if (!master) { master = actx.createGain(); master.gain.value = muted ? 0 : VOLUME.master; master.connect(actx.destination); }
   const src = actx.createBufferSource(); src.buffer = SFX[name]; src.loop = loop;
@@ -74,6 +78,7 @@ export function playSound(name, { loop = false, volume = VOLUME.sfx } = {}) {
   return src;
 }
 export function playMusic(name = 'undyne', rate = 1) {   // rate = tono de caster_loop (Mettaton EX suena a 0.97)
+  if (RENDER.ghost) return;
   musicWanted = true;
   const src = new URL(MUSIC[name], location.href).href;
   if (musicEl.src !== src) { musicEl.pause(); musicEl.src = src; }
@@ -81,8 +86,8 @@ export function playMusic(name = 'undyne', rate = 1) {   // rate = tono de caste
   musicFade = 1; applyVolume();
   if (musicEl.paused) musicEl.play().then(() => { music = true; }).catch(e => console.warn('música bloqueada:', e));
 }
-export function setMusicVolume(f) { musicFade = f; applyVolume(); }
-export function stopMusic() { musicWanted = false; music = null; musicEl.pause(); musicEl.currentTime = 0; }
+export function setMusicVolume(f) { if (RENDER.ghost) return; musicFade = f; applyVolume(); }
+export function stopMusic() { if (RENDER.ghost) return; musicWanted = false; music = null; musicEl.pause(); musicEl.currentTime = 0; }
 
 export async function loadAssets() {
   const meta = await (await fetch('assets/sprites/sprites.json')).json();
