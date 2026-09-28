@@ -1,24 +1,65 @@
+<div align="center">
+
 # Determination Battle Simulator
 
-**▶ Play here / Juega aquí:** https://giaxeri.github.io/Determination-Battle-Simulator/
+**A browser recreation of nine UNDERTALE boss fights, built from scratch in vanilla JavaScript.**
+**Una recreación en el navegador de nueve combates de UNDERTALE, hecha desde cero en JavaScript puro.**
 
-> This is a non-profit, fan-made tribute to UNDERTALE. UNDERTALE® is owned by Toby Fox.
-> Please support the official release: buy UNDERTALE at [undertale.com](https://undertale.com).
+[![Play now](https://img.shields.io/badge/%E2%96%B6_Play_now-GitHub_Pages-222?style=for-the-badge&logo=github)](https://giaxeri.github.io/Determination-Battle-Simulator/)
+
+![JavaScript](https://img.shields.io/badge/JavaScript-ES_Modules-F7DF1E?style=flat-square&logo=javascript&logoColor=black)
+![HTML5 Canvas](https://img.shields.io/badge/HTML5-Canvas-E34F26?style=flat-square&logo=html5&logoColor=white)
+![Web Audio](https://img.shields.io/badge/Web_Audio_API-4A90D9?style=flat-square)
+![Python](https://img.shields.io/badge/Python-asset_pipeline-3776AB?style=flat-square&logo=python&logoColor=white)
+![Dependencies](https://img.shields.io/badge/dependencies-0-brightgreen?style=flat-square)
+![Languages](https://img.shields.io/badge/i18n-EN_%7C_ES-blueviolet?style=flat-square)
+
+<img src="assets/preview.png" alt="Mettaton EX fight running in the browser" width="560">
 
 **[English](#english)** · **[Español](#español)**
+
+</div>
+
+> [!NOTE]
+> Non-profit, fan-made tribute to UNDERTALE. UNDERTALE® is owned by Toby Fox — please support the official release at [undertale.com](https://undertale.com).
+> Proyecto sin ánimo de lucro hecho por fans. UNDERTALE® pertenece a Toby Fox — apoya el juego oficial en [undertale.com](https://undertale.com).
 
 ---
 
 ## English
 
-A web simulator of **several UNDERTALE boss fights**, written in plain HTML5 Canvas + JavaScript (no frameworks, no
+A web simulator of **nine UNDERTALE boss fights**, written in plain HTML5 Canvas + JavaScript (no frameworks, no
 dependencies). Every fight is translated from the game's original GameMaker code: attack patterns, timings, texts and
 sounds all come from the game, running at 640×480 and 30 FPS.
 
-You can play each boss's full fight or practice any of its attacks on its own. The whole game can be played in
+You can play each boss's full fight or practice any of its **136 attacks** on its own. The whole game can be played in
 **English or Spanish**.
 
 Made by Gianfry ([Giaxeri](https://github.com/Giaxeri)).
+
+### Technical highlights
+
+| | |
+|---|---|
+| **Custom game engine** | Fixed-timestep 30 FPS logic loop, scene switching, collision helpers and an object model that mimics the GameMaker runner (`gm.js`), ~12,000 lines of code with zero dependencies. |
+| **Smooth rendering at any refresh rate** | Game logic stays at 30 FPS like the original, while each screen refresh draws an interpolated "ghost" frame between the previous and current state (`smooth.js`). |
+| **Code translation** | Attack patterns, timings and damage formulas ported from the game's GML objects to JavaScript classes that extend a shared `Battle` base class. |
+| **Binary asset pipeline** | A Python reader for GameMaker's `data.win` format (`tools/datawin.py`) extracts sprites, texture pages, fonts and sounds from the user's own copy of the game. |
+| **Internationalization** | Full EN/ES text system, Spanish sprites rebuilt at load time, accented glyphs generated from the base bitmap font, and a Node script (`check_es.mjs`) that verifies every translated string fits its box. |
+| **Audio** | Sound effects through the Web Audio API, streamed music, and a volume/mute control. |
+| **Deployment** | Static site on GitHub Pages with SEO and Open Graph metadata, `sitemap.xml` and `robots.txt`; settings persisted in `localStorage`. |
+
+```
+index.html ─► main.js (30 FPS loop, input, scenes)
+                 ├── menu.js / ui.js ............ menus, options, scaling
+                 ├── battle.js (base class) ◄──── undyne · muffet · mettaton · napstablook
+                 │                                toriel · papyrus · asgore · asriel · sans
+                 ├── gm.js ...................... GameMaker-style movement & collisions
+                 ├── smooth.js .................. frame interpolation
+                 ├── assets.js / text.js ........ sprites, bitmap fonts, audio, text writer
+                 └── i18n.js + lang/ ............ English / Spanish
+tools/ (Python + Node) ─► data.win → assets/
+```
 
 ### Bosses
 
@@ -220,14 +261,26 @@ The sprites, fonts and sounds in `assets/` are extracted from the `data.win` of 
 
 ## Español
 
-Simulador web de **varios jefes de UNDERTALE**, hecho en HTML5 Canvas + JavaScript puro (sin frameworks ni
+Simulador web de **nueve jefes de UNDERTALE**, hecho en HTML5 Canvas + JavaScript puro (sin frameworks ni
 dependencias). Cada combate está traducido del código original del juego (GameMaker): los patrones de ataque,
 los tiempos, los textos y los sonidos son los del juego, a 640×480 y 30 FPS.
 
-Puedes jugar la pelea completa de cada jefe o practicar cualquiera de sus ataques por separado. Todo el juego se
+Puedes jugar la pelea completa de cada jefe o practicar cualquiera de sus **136 ataques** por separado. Todo el juego se
 puede jugar en **inglés o en español**.
 
 Hecho por Gianfry ([Giaxeri](https://github.com/Giaxeri)).
+
+### Aspectos técnicos
+
+| | |
+|---|---|
+| **Motor de juego propio** | Bucle lógico de paso fijo a 30 FPS, cambio de escenas, utilidades de colisión y un modelo de objetos que imita el *runner* de GameMaker (`gm.js`); ~12.000 líneas de código sin dependencias. |
+| **Movimiento fluido a cualquier tasa de refresco** | La lógica sigue a 30 FPS como el original, y en cada refresco de pantalla se dibuja un fotograma "fantasma" interpolado entre el estado anterior y el actual (`smooth.js`). |
+| **Traducción de código** | Patrones de ataque, tiempos y fórmulas de daño portados desde los objetos GML del juego a clases JavaScript que extienden una clase base común `Battle`. |
+| **Pipeline de assets binarios** | Lector en Python del formato `data.win` de GameMaker (`tools/datawin.py`) que extrae sprites, páginas de textura, fuentes y sonidos de tu propia copia del juego. |
+| **Internacionalización** | Sistema de textos EN/ES, sprites en español reconstruidos al cargar, tildes generadas a partir de la fuente bitmap y un script de Node (`check_es.mjs`) que verifica que cada texto traducido quepa en su caja. |
+| **Audio** | Efectos con la Web Audio API, música en streaming y control de volumen/silencio. |
+| **Despliegue** | Sitio estático en GitHub Pages con metadatos SEO y Open Graph, `sitemap.xml` y `robots.txt`; ajustes guardados en `localStorage`. |
 
 ### Jefes
 
