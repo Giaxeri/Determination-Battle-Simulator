@@ -1,6 +1,7 @@
 // Sans: fuente fnt_comicsans (con sus letras del español), escritor de sus globos (typer 107/108/109),
 // dibujo de partes de sprites (draw_sprite_part_ext) y los sonidos largos de ambiente (pájaros y "chokedup").
-import { SPR, FNT, drawText, playSound, VOLUME, isMuted, fresh } from './assets.js';
+import { SPR, FNT, drawText, playSound, VOLUME, isMuted, fresh, audioURL, registerPrefetch } from './assets.js';
+registerPrefetch('assets/audio/mus_birdnoise.ogg', 'assets/audio/mus_chokedup.ogg');   // sonidos de ambiente (abajo)
 
 // ---------------------------------------------------------------- fuente fnt_comicsans (extract.py no la saca: la carga este módulo)
 const img = src => new Promise((ok, err) => { const i = new Image(); i.onload = () => ok(i); i.onerror = err; i.src = src; });
@@ -140,7 +141,7 @@ const AMB = {};
 let watcher = null;
 export function ambient(name, file, owner, vol = 1) {
   let a = AMB[name];
-  if (!a) { a = AMB[name] = new Audio(file); a.loop = true; }
+  if (!a) { a = AMB[name] = new Audio(audioURL(file)); a.loop = true; }
   a.owner = owner; a.vol = vol;
   a.volume = isMuted() ? 0 : Math.min(1, VOLUME.master * VOLUME.music * 2 * vol);
   a.currentTime = 0; a.play().catch(() => {});

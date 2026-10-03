@@ -5,9 +5,19 @@ export const FNT = {};   // nombre -> { img, glyphs }
 const img = src => new Promise((ok, err) => { const i = new Image(); i.onload = () => ok(i); i.onerror = err; i.src = src; });
 
 // ---------- Audio (WebAudio para poder solapar efectos) ----------
+// El AudioContext se crea al cargar la página (empieza "suspendido") y TODOS los efectos se decodifican
+// durante la pantalla de carga; la primera tecla o clic solo lo reanuda. Antes se decodificaban al primer
+// gesto: si se pulsaba una tecla mientras aún cargaba, los sonidos que faltaban no se decodificaban nunca
+// (y los primeros sonidos de la partida se perdían mientras se decodificaba).
 let actx = null;
 const SFX = {};          // nombre -> AudioBuffer
-const rawAudio = {};     // nombre -> ArrayBuffer (se decodifica al primer gesto del usuario)
+function audioCtx() {
+  if (!actx) try { actx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { console.warn('sin WebAudio', e); }
+  return actx;
+}
+function decode(a, buf) {          // decodeAudioData con promesa (y con callbacks para Safari antiguo)
+  return new Promise((ok, err) => { const p = a.decodeAudioData(buf, ok, err); if (p && p.then) p.then(ok, err); });
+}
 const SOUND_FILES = {
   bell: 'assets/sfx/snd_bell.wav', hurt: 'assets/sfx/snd_hurt1.wav', damage: 'assets/sfx/snd_damage.wav',
   laz: 'assets/sfx/snd_laz.wav', select: 'assets/sfx/snd_select.wav', squeak: 'assets/sfx/snd_squeak.wav',
@@ -36,15 +46,23 @@ const MUSIC = { undyne: 'assets/audio/mus_x_undyne.ogg',   // "Battle Against a 
                 ghost: 'assets/audio/mus_ghostbattle.ogg',     // "Ghost Fight"
                 mettaton: 'assets/audio/mus_mettaton_ex.ogg',  // "Death by Glamour"
                 mettsad: 'assets/audio/mus_mettsad.ogg' };
-const MUSIC_FILE = MUSIC.undyne;
-let unlocking = null, musicWanted = false;
-export function unlockAudio() {
-  if (unlocking) { if (actx.state === 'suspended') actx.resume(); return unlocking; }
-  actx = new (window.AudioContext || window.webkitAudioContext)();
-  unlocking = Promise.all(Object.entries(rawAudio).map(async ([k, buf]) => {
-    try { SFX[k] = await actx.decodeAudioData(buf.slice(0)); } catch (e) { console.warn('audio', k, e); }
-  }));
-  return unlocking;
+let musicWanted = false;
+export function unlockAudio() {      // en cada tecla / clic: reanuda el audio si el navegador lo pausó
+  const a = audioCtx();
+  if (a && a.state !== 'running' && a.state !== 'closed') a.resume().catch(() => {});
+}
+
+// La música se descarga entera en segundo plano tras la pantalla de carga (blob en memoria): así empieza
+// al instante y no depende de la red a mitad del combate. Si aún no ha llegado, se reproduce desde la URL.
+const BLOBS = {};                    // url -> blob: URL
+const EXTRA_AUDIO = [];
+export function audioURL(url) { return BLOBS[url] || url; }
+export function registerPrefetch(...urls) { EXTRA_AUDIO.push(...urls); }
+async function prefetchMusic() {
+  for (const url of [...new Set([...Object.values(MUSIC), ...EXTRA_AUDIO])]) {
+    if (BLOBS[url]) continue;
+    try { const r = await fetch(url); if (r.ok) BLOBS[url] = URL.createObjectURL(await r.blob()); } catch (e) { /* se usará la URL */ }
+  }
 }
 
 // Dibujo "fantasma" (fotogramas interpolados entre dos frames del juego): no debe sonar ni tocar la música
@@ -65,44 +83,67 @@ export function toggleMute() {
 }
 
 // La música va por un <audio> (empieza al instante, sin esperar a decodificar 1.8 MB)
-let music = null;
-const musicEl = new Audio(MUSIC_FILE);
+let music = null, musicKey = null;
+const musicEl = new Audio();
 musicEl.loop = true; musicEl.preload = 'auto';
 export function playSound(name, { loop = false, volume = VOLUME.sfx } = {}) {
   if (RENDER.ghost) return null;
-  if (!actx || !SFX[name]) return null;
-  if (!master) { master = actx.createGain(); master.gain.value = muted ? 0 : VOLUME.master; master.connect(actx.destination); }
-  const src = actx.createBufferSource(); src.buffer = SFX[name]; src.loop = loop;
-  const g = actx.createGain(); g.gain.value = volume;
+  const a = actx;
+  if (!a || !SFX[name]) return null;
+  if (a.state === 'suspended') a.resume().catch(() => {});
+  if (!master) { master = a.createGain(); master.gain.value = muted ? 0 : VOLUME.master; master.connect(a.destination); }
+  const src = a.createBufferSource(); src.buffer = SFX[name]; src.loop = loop;
+  const g = a.createGain(); g.gain.value = volume;
   src.connect(g).connect(master); src.start();
   return src;
 }
 export function playMusic(name = 'undyne', rate = 1) {   // rate = tono de caster_loop (Mettaton EX suena a 0.97)
   if (RENDER.ghost) return;
   musicWanted = true;
-  const src = new URL(MUSIC[name], location.href).href;
-  if (musicEl.src !== src) { musicEl.pause(); musicEl.src = src; }
+  if (musicKey !== name) { musicEl.pause(); musicEl.src = audioURL(MUSIC[name]); musicKey = name; }
   musicEl.preservesPitch = false; musicEl.defaultPlaybackRate = rate; musicEl.playbackRate = rate;
   musicFade = 1; applyVolume();
-  if (musicEl.paused) musicEl.play().then(() => { music = true; }).catch(e => console.warn('música bloqueada:', e));
+  if (musicEl.paused) musicEl.play().then(() => { music = true; }).catch(e => {
+    if (e.name !== 'AbortError') console.warn('música bloqueada:', e);
+    retryMusic();
+  });
+}
+// Si el navegador no dejó empezar la música (sin gesto todavía, o un pause() la cortó), se reintenta en la
+// próxima tecla mientras siga queriéndose.
+function retryMusic() {
+  const go = () => { removeEventListener('keydown', go, true); removeEventListener('pointerdown', go, true);
+                     if (musicWanted && musicEl.paused) musicEl.play().catch(() => {}); };
+  addEventListener('keydown', go, true); addEventListener('pointerdown', go, true);
 }
 export function setMusicVolume(f) { if (RENDER.ghost) return; musicFade = f; applyVolume(); }
 export function stopMusic() { if (RENDER.ghost) return; musicWanted = false; music = null; musicEl.pause(); musicEl.currentTime = 0; }
 
+// Progreso de la pantalla de carga (main.js la dibuja): primero las fuentes, para poder escribir "Cargando"
+export const LOAD = { done: 0, total: 1, fonts: false };
 export async function loadAssets() {
-  const meta = await (await fetch('assets/sprites/sprites.json')).json();
-  await Promise.all(Object.entries(meta).map(async ([name, m]) => {
-    const frames = await Promise.all([...Array(m.frames)].map((_, i) => img(`assets/sprites/${name}_${i}.png`)));
-    SPR[name] = { ...m, frames };
-  }));
-  for (const name of ['fnt_main', 'fnt_curs', 'fnt_small', 'fnt_dmg', 'fnt_plain', 'fnt_maintext']) {
+  const metaP = fetch('assets/sprites/sprites.json').then(r => r.json());
+  await Promise.all(['fnt_main', 'fnt_curs', 'fnt_small', 'fnt_dmg', 'fnt_plain', 'fnt_maintext'].map(async name => {
     const [data, image] = await Promise.all([fetch(`assets/fonts/${name}.json`).then(r => r.json()), img(`assets/fonts/${name}.png`)]);
     FNT[name] = { img: image, ...data };
-  }
-  for (const name of ['fnt_main', 'fnt_maintext', 'fnt_plain']) addAccents(name);
-  await Promise.all(Object.entries(SOUND_FILES).map(async ([k, url]) => {
-    try { rawAudio[k] = await (await fetch(url)).arrayBuffer(); } catch (e) { console.warn('no se pudo cargar', url); }
   }));
+  for (const name of ['fnt_main', 'fnt_maintext', 'fnt_plain']) addAccents(name);
+  LOAD.fonts = true;
+  const meta = await metaP, sounds = Object.entries(SOUND_FILES), a = audioCtx();
+  LOAD.total = Object.values(meta).reduce((n, m) => n + m.frames, 0) + sounds.length;
+  const one = p => p.then(v => { LOAD.done++; return v; }, e => { LOAD.done++; throw e; });
+  await Promise.all([
+    ...Object.entries(meta).map(async ([name, m]) => {
+      const frames = await Promise.all([...Array(m.frames)].map((_, i) => one(img(`assets/sprites/${name}_${i}.png`))));
+      SPR[name] = { ...m, frames };
+    }),
+    ...sounds.map(([k, url]) => one((async () => {
+      try {
+        const r = await fetch(url); if (!r.ok) throw new Error(r.status);
+        if (a) SFX[k] = await decode(a, await r.arrayBuffer());
+      } catch (e) { console.warn('no se pudo cargar', url, e); }
+    })())),
+  ]);
+  prefetchMusic();                 // en segundo plano, sin esperar
 }
 
 // Copia de un lienzo que se leyó con getImageData: Chrome pasa esos lienzos a la CPU y dibujarlos
@@ -247,4 +288,4 @@ export function drawText(ctx, font, text, x, y, { color = '#fff', mono = 0 } = {
   }
   return cx - x;
 }
-export function debugAudio() { return { ctx: actx && actx.state, decoded: Object.keys(SFX), musicPlaying: !musicEl.paused, musicWanted }; }
+export function debugAudio() { return { ctx: actx && actx.state, decoded: Object.keys(SFX), total: Object.keys(SOUND_FILES).length, musicPlaying: !musicEl.paused, musicWanted, blobs: Object.keys(BLOBS).length }; }

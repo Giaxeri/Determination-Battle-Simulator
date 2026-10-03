@@ -1,5 +1,8 @@
 // Determination Battle Simulator — combates de jefes de UNDERTALE (640x480, 30 FPS como el juego)
-import { loadAssets, unlockAudio, toggleMute, stopMusic } from './assets.js';
+import { loadAssets, unlockAudio, toggleMute, stopMusic, LOAD, drawText } from './assets.js';
+import { fontReady as papyrusFont } from './papyrus_gfx.js';
+import { fontReady as sansFont } from './sans_gfx.js';
+import { tr } from './i18n.js';
 import { BossMenu, BOSSES } from './menu.js';
 import { NapstablookBattle } from './napstablook.js';
 import { MettatonBattle } from './mettaton.js';
@@ -38,6 +41,7 @@ addEventListener('keydown', e => {
 });
 addEventListener('keyup', e => { const k = MAP[e.key]; if (k) held.delete(k); });
 addEventListener('blur', () => held.clear());
+addEventListener('pointerdown', unlockAudio);                // un clic (volumen, enlaces) también activa el sonido
 
 function input() {
   const inp = { confirm: pressed.has('confirm'), cancel: pressed.has('cancel'),
@@ -102,4 +106,27 @@ function loop(now) {
   requestAnimationFrame(loop);
 }
 
-loadAssets().then(() => { buildSpanishSprites(); buildUI(); scene.draw(ctx); requestAnimationFrame(t => { last = t; loop(t); }); });
+// ---------- Pantalla de carga: sprites, fuentes y TODOS los efectos decodificados antes de empezar ----------
+let loading = true, shown = 0;
+function drawLoading() {
+  if (!loading) return;
+  const p = LOAD.done / LOAD.total;
+  shown += (p - shown) * 0.25;                                   // la barra avanza suave
+  ctx.fillStyle = '#000'; ctx.fillRect(0, 0, 640, 480);
+  if (LOAD.fonts) {
+    const t = tr('Loading...');
+    drawText(ctx, 'fnt_main', t, 320 - t.length * 8, 196, { mono: 16 });
+    const pc = Math.floor(p * 100) + '%';
+    drawText(ctx, 'fnt_maintext', pc, 320 - pc.length * 4, 262, { color: '#808080' });
+  }
+  ctx.fillStyle = '#fff'; ctx.fillRect(170, 234, 300, 20);
+  ctx.fillStyle = '#000'; ctx.fillRect(173, 237, 294, 14);
+  ctx.fillStyle = '#ff0'; ctx.fillRect(173, 237, Math.round(294 * Math.min(1, shown)), 14);
+  requestAnimationFrame(drawLoading);
+}
+drawLoading();
+Promise.all([loadAssets(), papyrusFont, sansFont]).catch(e => console.error('carga', e)).then(() => {
+  loading = false; pressed.clear(); typed.length = 0;           // lo pulsado mientras cargaba no cuenta
+  buildSpanishSprites(); buildUI(); scene.draw(ctx);
+  requestAnimationFrame(t => { last = t; loop(t); });
+});

@@ -28,7 +28,8 @@ export const BOSSES = [
   { name: 'Sans', id: 'sans', full: 'MEGALOVANIA', attacks: SANS_ATTACKS },
 ];
 
-const VISIBLE = 11;          // filas visibles antes de desplazar la lista
+const VISIBLE = 13;          // filas visibles antes de desplazar la lista
+const SCALE = 0.75, ROW = 26; // las listas de jefes / ataques van con fnt_main al 75 %
 const UPPER = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', LOWER = 'abcdefghijklmnopqrstuvwxyz';
 
 export class BossMenu {
@@ -128,12 +129,12 @@ export class BossMenu {
       const i = k + this.scroll;
       // pelea completa arriba y, tras un hueco, los ataques / Options separado de los jefes
       const gap = (this.page === 1 && i > 0 && this.scroll === 0) || (this.page === 0 && it.options) ? 16 : 0;
-      const y = 90 + k * 32 + gap;
-      drawText(ctx, 'fnt_main', it.label, 124, y, { mono: 16 });
-      if (i === this.sel) drawSprite(ctx, 'spr_heart', 0, 84, y + 6);
+      const y = 90 + k * ROW + gap;
+      small(ctx, it.label, 124, y);
+      if (i === this.sel) drawSprite(ctx, 'spr_heart', 0, 92, y + 2);
     });
-    if (this.scroll > 0) drawText(ctx, 'fnt_main', '^', 600, 90, { mono: 16, color: '#808080' });
-    if (this.scroll + VISIBLE < list.length) drawText(ctx, 'fnt_main', 'v', 600, 90 + (VISIBLE - 1) * 32 + 16, { mono: 16, color: '#808080' });
+    if (this.scroll > 0) small(ctx, '^', 600, 90, '#808080');
+    if (this.scroll + VISIBLE < list.length) small(ctx, 'v', 600, 90 + (VISIBLE - 1) * ROW + 16, '#808080');
   }
 
   // Decoración del menú principal: caras y personajes del juego moviéndose un poco
@@ -174,4 +175,10 @@ export class BossMenu {
     });
     drawText(ctx, 'fnt_maintext', tr('Up to 6 letters.'), 24, 456, { color: '#808080' });
   }
+}
+
+function small(ctx, text, x, y, color = '#fff') {
+  ctx.save(); ctx.translate(x, y); ctx.scale(SCALE, SCALE);
+  drawText(ctx, 'fnt_main', text, 0, 0, { mono: 16, color });
+  ctx.restore();
 }

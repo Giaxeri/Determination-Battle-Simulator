@@ -10,7 +10,7 @@ export const ES = {};
 // ---------------------------------------------------------------- interfaz (clave = texto en inglés)
 ES.ui = {
   // página principal y créditos
-  'Bosses List': 'Lista de Jefes', 'Options': 'Opciones', 'Player': 'Jugador',
+  'Bosses List': 'Lista de Jefes', 'Loading...': 'Cargando...', 'Options': 'Opciones', 'Player': 'Jugador',
   'Resolution': 'Resolución', 'Language': 'Idioma', 'Name': 'Nombre', 'Back': 'Volver',
   'Small': 'Pequeña', 'Default': 'Normal', 'Large': 'Grande',
   'Left / Right: change the size of the game.': 'Izquierda / Derecha: cambia el tamaño del juego.',
