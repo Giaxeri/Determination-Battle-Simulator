@@ -108,6 +108,13 @@ export function layout() {
   const W = 640 * K, H = 480 * K, totalH = (480 + TOP + BOTTOM) * K;
   const x0 = (innerWidth - W) / 2, y0 = Math.max(0, (innerHeight - totalH) / 2) + TOP * K;
   place(cv, x0, y0, W, H);
+  // El lienzo se dibuja a la resolución real de la pantalla (no a 640x480 estirado): los píxeles del juego
+  // salen nítidos y del mismo tamaño, y el texto reducido del menú no se deforma. Todo se sigue dibujando
+  // en coordenadas 640x480 gracias a la escala del contexto.
+  const k = Math.min(3, Math.max(1, W * (window.devicePixelRatio || 1) / 640));
+  const bw = Math.round(640 * k), bh = Math.round(480 * k);
+  if (cv.width !== bw || cv.height !== bh) { cv.width = bw; cv.height = bh; }
+  const g = cv.getContext('2d'); g.setTransform(bw / 640, 0, 0, bh / 480, 0, 0); g.imageSmoothingEnabled = false;
   if (!parts) return;
   const p = parts;
   sizeCanvas(p.title, K * 1.1); p.title.style.left = (innerWidth - p.title.width * K * 1.1) / 2 + 'px'; p.title.style.top = y0 - 38 * K + 'px';
