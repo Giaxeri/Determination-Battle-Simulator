@@ -42,22 +42,24 @@ def main(src, out):
     meta = {}
     for s in d.sprites():
         if not any(re.search(p, s['name']) for p in SPRITES): continue
+        safe_name = os.path.basename(s['name'])
         for i, f in enumerate(s['frames']):
-            d.tpag_image(f).save(f"{out}/sprites/{s['name']}_{i}.png")
+            d.tpag_image(f).save(f"{out}/sprites/{safe_name}_{i}.png")
         meta[s['name']] = dict(w=s['w'], h=s['h'], ox=s['ox'], oy=s['oy'], bbox=s['bbox'], frames=len(s['frames']))
     json.dump(meta, open(f'{out}/sprites/sprites.json', 'w'), indent=1)
     for f in d.fonts():
         if f['name'] not in FONTS: continue
+        safe_name = os.path.basename(f['name'])
         o = f['off']
-        d.tpag_image(d.u32(o+28)).save(f"{out}/fonts/{f['name']}.png")
+        d.tpag_image(d.u32(o+28)).save(f"{out}/fonts/{safe_name}.png")
         glyphs = {}
         for g in d.ptr_list(o+40):
             c, x, y, w, h = struct.unpack_from('<5H', d.b, g); shift, off = struct.unpack_from('<2h', d.b, g+10)
             glyphs[chr(c)] = [x, y, w, h, shift, off]
-        json.dump(dict(size=d.u32(o+8), glyphs=glyphs), open(f"{out}/fonts/{f['name']}.json", 'w'))
+        json.dump(dict(size=d.u32(o+8), glyphs=glyphs), open(f"{out}/fonts/{safe_name}.json", 'w'))
     os.makedirs(f'{out}/sfx', exist_ok=True)
     for name, data in d.sounds():
-        if name in SOUNDS: open(f'{out}/sfx/{name.lower()}.wav', 'wb').write(data)
+        if name in SOUNDS: open(f'{out}/sfx/{os.path.basename(name.lower())}.wav', 'wb').write(data)
     print(len(meta), 'sprites,', len(FONTS), 'fuentes,', len(SOUNDS), 'sonidos ->', out)
 
 if __name__ == '__main__': main(sys.argv[1], sys.argv[2])
